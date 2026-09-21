@@ -1,0 +1,450 @@
+[
+  {
+    "id": 1,
+    "title": "Java 面向对象三大特性：封装、继承、多态",
+    "summary": "用最直白的例子把封装、继承、多态讲清楚，附上能直接运行的代码，帮你迈过 Java 入门最容易卡住的一关。",
+    "category": "Java 后端",
+    "tags": [
+      "Java",
+      "面向对象"
+    ],
+    "date": "2026-08-18",
+    "readingTime": 8,
+    "cover": "linear-gradient(135deg, #2f6bff, #5b8cff)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "刚开始学 Java 的时候，封装、继承、多态这三个词几乎每天都会看到，但真正理解它们为什么存在，往往要写上一阵子代码。这篇文章用一个小例子把它们串起来。"
+      },
+      {
+        "type": "h2",
+        "text": "一、封装：把数据藏起来"
+      },
+      {
+        "type": "p",
+        "text": "封装的核心是「不让外部随意修改内部状态」。做法是把字段设为 private，只暴露必要的方法。"
+      },
+      {
+        "type": "code",
+        "text": "public class Student {\n    private String name;\n    private int age;\n\n    public void setAge(int age) {\n        if (age < 0 || age > 150) {\n            throw new IllegalArgumentException(\"年龄不合法\");\n        }\n        this.age = age;\n    }\n\n    public int getAge() {\n        return age;\n    }\n}"
+      },
+      {
+        "type": "p",
+        "text": "这样外部就无法把 age 设成 -1。校验逻辑集中在 setter 里，日后要改只改一处。"
+      },
+      {
+        "type": "h2",
+        "text": "二、继承：复用已有的能力"
+      },
+      {
+        "type": "p",
+        "text": "继承让子类直接拥有父类的属性和方法，用 extends 关键字。注意 Java 只支持单继承。"
+      },
+      {
+        "type": "h2",
+        "text": "三、多态：同一个方法，不同的表现"
+      },
+      {
+        "type": "p",
+        "text": "多态建立在继承和方法重写之上，父类引用指向子类对象，运行时才决定调用哪个实现。"
+      },
+      {
+        "type": "code",
+        "text": "Animal a = new Dog();\na.speak();   // 输出「汪汪」，调用的是 Dog 重写后的方法"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "封装解决「数据安全」问题",
+          "继承解决「代码复用」问题",
+          "多态解决「扩展性」问题，新增子类不用改调用方代码"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "把这三件事对应到它们要解决的问题上，比死记定义有用得多。"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "MySQL 索引入门：为什么加了索引查询就快了",
+    "summary": "B+ 树到底长什么样？为什么索引能加速查询，又为什么索引不是越多越好？用一张表的数据量变化说明白。",
+    "category": "数据库",
+    "tags": [
+      "MySQL",
+      "索引",
+      "SQL"
+    ],
+    "date": "2026-08-05",
+    "readingTime": 10,
+    "cover": "linear-gradient(135deg, #0ea5a5, #38bdf8)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "很多人知道「加索引能变快」，但说不清楚为什么。这篇文章从数据查找方式讲起。"
+      },
+      {
+        "type": "h2",
+        "text": "一、没有索引时发生了什么"
+      },
+      {
+        "type": "p",
+        "text": "如果没有索引，MySQL 只能从第一行开始逐行比对，这叫全表扫描。数据量到十万行时，一次查询可能要扫十万行。"
+      },
+      {
+        "type": "h2",
+        "text": "二、索引就像书的目录"
+      },
+      {
+        "type": "p",
+        "text": "索引把字段值有序组织成一棵 B+ 树。查找时从根节点逐层向下，每层只比较几次，就能定位到目标数据。"
+      },
+      {
+        "type": "code",
+        "text": "-- 在 name 字段建索引\nCREATE INDEX idx_student_name ON student(name);\n\n-- 查看执行计划，重点看 type 和 rows\nEXPLAIN SELECT * FROM student WHERE name = '张三';"
+      },
+      {
+        "type": "h2",
+        "text": "三、索引不是越多越好"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "索引本身要占磁盘空间",
+          "每次 INSERT / UPDATE / DELETE 都要同步维护索引，写入会变慢",
+          "如果查询条件用不到索引（比如对字段做了函数运算），索引会失效"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "通常只给「经常出现在 WHERE、ORDER BY、JOIN 里」的字段建索引就够了。"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Git 从入门到够用：只需要记住这几个命令",
+    "summary": "不用背几十个 Git 命令。掌握 add / commit / push / pull / branch / merge 这几个，日常开发就够了。",
+    "category": "开发工具",
+    "tags": [
+      "Git",
+      "版本控制"
+    ],
+    "date": "2026-07-28",
+    "readingTime": 7,
+    "cover": "linear-gradient(135deg, #f97316, #f59e0b)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "Git 的命令很多，但日常真正高频使用的就那么几个。先把这条主线走通。"
+      },
+      {
+        "type": "h2",
+        "text": "一、最核心的四步"
+      },
+      {
+        "type": "code",
+        "text": "git status              # 看当前有哪些改动\ngit add .               # 把改动放进暂存区\ngit commit -m \"说明\"     # 提交到本地仓库\ngit push                # 推送到远程仓库"
+      },
+      {
+        "type": "h2",
+        "text": "二、多人协作必备"
+      },
+      {
+        "type": "code",
+        "text": "git pull                # 拉取远程最新代码\ngit checkout -b feature # 新建并切换到分支\ngit merge feature       # 把分支合并回主分支"
+      },
+      {
+        "type": "h2",
+        "text": "三、几个实用习惯"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "每次提交只做一件事，提交信息写清楚「做了什么」",
+          "每天开工前先 pull，避免冲突堆积",
+          "给项目加 .gitignore，把 node_modules、target、.idea 排除掉",
+          "不要提交密码、密钥等敏感信息"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "把这些养成习惯，简历上写「使用 Git 进行版本管理」才站得住脚。"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Vue 3 组合式 API：ref 和 reactive 该怎么选",
+    "summary": "setup 语法糖、ref、reactive、computed、watch —— 用一个计数器例子讲清楚 Vue 3 的数据响应式。",
+    "category": "前端开发",
+    "tags": [
+      "Vue",
+      "JavaScript"
+    ],
+    "date": "2026-07-15",
+    "readingTime": 9,
+    "cover": "linear-gradient(135deg, #42b883, #2f9e6e)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "Vue 3 的组合式 API 让逻辑可以按功能组织，而不是按选项堆在 data、methods 里。"
+      },
+      {
+        "type": "h2",
+        "text": "一、<script setup> 是最常用的写法"
+      },
+      {
+        "type": "code",
+        "text": "<script setup>\nimport { ref, computed } from 'vue'\n\nconst count = ref(0)\nconst double = computed(() => count.value * 2)\n\nfunction increment() {\n  count.value++\n}\n</script>"
+      },
+      {
+        "type": "h2",
+        "text": "二、ref 还是 reactive"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "ref 可以包装任意类型（数字、字符串、对象、数组），用的时候要加 .value",
+          "reactive 只能传对象，访问时不用 .value，但解构会丢失响应性",
+          "推荐：基本类型用 ref，对象也优先用 ref，一致性更好"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "三、在模板里不用写 .value"
+      },
+      {
+        "type": "p",
+        "text": "Vue 在模板中会自动解包 ref，所以模板里直接写 {{ count }} 就行。只有在 script 里才需要 count.value。"
+      },
+      {
+        "type": "p",
+        "text": "这一条是最容易踩的坑：忘了加 .value，数据不动，排查半天。"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Flex 布局实战：一个响应式卡片列表的完整写法",
+    "summary": "从 display:flex 的三个核心属性讲起，最后落地成一个桌面三列、手机单列的卡片网格。",
+    "category": "前端开发",
+    "tags": [
+      "CSS",
+      "Flex",
+      "响应式"
+    ],
+    "date": "2026-07-02",
+    "readingTime": 8,
+    "cover": "linear-gradient(135deg, #a855f7, #7c3aed)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "Flex 布局最常被问的就是主轴和交叉轴。搞清楚这两根轴，属性就都说得通了。"
+      },
+      {
+        "type": "h2",
+        "text": "一、三个必须记住的属性"
+      },
+      {
+        "type": "code",
+        "text": ".container {\n  display: flex;\n  justify-content: space-between;  /* 主轴对齐 */\n  align-items: center;            /* 交叉轴对齐 */\n  gap: 16px;                      /* 间距，比 margin 更好用 */\n}"
+      },
+      {
+        "type": "h2",
+        "text": "二、让卡片自动换行"
+      },
+      {
+        "type": "code",
+        "text": ".list {\n  display: flex;\n  flex-wrap: wrap;   /* 放不下就换行 */\n  gap: 24px;\n}\n\n.item {\n  flex: 1 1 300px;   /* 最小 300px，有空间就拉伸 */\n}"
+      },
+      {
+        "type": "h2",
+        "text": "三、更推荐用 Grid 做网格"
+      },
+      {
+        "type": "p",
+        "text": "如果只是整齐的等宽网格，CSS Grid 比 Flex 更省事，一行代码就能定义列数。"
+      },
+      {
+        "type": "code",
+        "text": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n  gap: 24px;\n}\n\n@media (max-width: 900px) {\n  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n}\n\n@media (max-width: 600px) {\n  .grid { grid-template-columns: minmax(0, 1fr); }\n}"
+      },
+      {
+        "type": "p",
+        "text": "minmax(0, 1fr) 里的 0 很关键：不加的话，内容过宽会把网格撑破。"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Axios 封装与拦截器：让接口调用更省心",
+    "summary": "统一 baseURL、统一超时、统一错误提示 —— 用拦截器把重复代码收进一层，组件里只管拿数据。",
+    "category": "前端开发",
+    "tags": [
+      "Axios",
+      "HTTP"
+    ],
+    "date": "2026-06-20",
+    "readingTime": 7,
+    "cover": "linear-gradient(135deg, #ec4899, #db2777)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "如果每个组件都自己写 try/catch、自己拼错误提示，代码很快就会失控。封装一层 axios 实例能解决大部分重复。"
+      },
+      {
+        "type": "h2",
+        "text": "一、创建实例"
+      },
+      {
+        "type": "code",
+        "text": "const request = axios.create({\n  baseURL: '/api',\n  timeout: 10000\n})"
+      },
+      {
+        "type": "h2",
+        "text": "二、响应拦截器统一处理"
+      },
+      {
+        "type": "code",
+        "text": "request.interceptors.response.use(\n  (response) => {\n    const res = response.data\n    if (res.code === 0 || res.code === 200) return res.data\n    return Promise.reject(new Error(res.message || '接口异常'))\n  },\n  (error) => {\n    let message = '网络异常，请稍后重试'\n    if (error.code === 'ECONNABORTED') message = '请求超时'\n    else if (error.response) message = `请求失败（HTTP ${error.response.status}）`\n    return Promise.reject(new Error(message))\n  }\n)"
+      },
+      {
+        "type": "h2",
+        "text": "三、组件里就干净了"
+      },
+      {
+        "type": "code",
+        "text": "try {\n  loading.value = true\n  articles.value = await fetchArticles()\n} catch (e) {\n  error.value = e.message\n} finally {\n  loading.value = false\n}"
+      },
+      {
+        "type": "p",
+        "text": "loading 和 error 两个状态一定要显式处理，否则用户点进去看到一片空白，不知道是没数据还是加载失败。"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Maven 到底在做什么：依赖、生命周期与 pom.xml",
+    "summary": "为什么 Java 项目要有个 pom.xml？依赖从哪来？mvn compile 背后跑了什么？把 Maven 的核心概念一次讲清。",
+    "category": "Java 后端",
+    "tags": [
+      "Maven",
+      "构建工具"
+    ],
+    "date": "2026-06-06",
+    "readingTime": 9,
+    "cover": "linear-gradient(135deg, #6366f1, #4f46e5)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "刚开始用 Maven 时，最容易困惑的是「为什么我什么都没下，它就能自动把 jar 包拿到项目里」。"
+      },
+      {
+        "type": "h2",
+        "text": "一、依赖声明在 pom.xml"
+      },
+      {
+        "type": "code",
+        "text": "<dependency>\n  <groupId>org.springframework.boot</groupId>\n  <artifactId>spring-boot-starter-web</artifactId>\n  <version>3.5.0</version>\n</dependency>"
+      },
+      {
+        "type": "p",
+        "text": "Maven 根据这三行（groupId / artifactId / version，简称 GAV）去仓库里下载对应的 jar，并自动把它的间接依赖也一起拉下来。"
+      },
+      {
+        "type": "h2",
+        "text": "二、本地仓库在哪里"
+      },
+      {
+        "type": "p",
+        "text": "下载下来的包会缓存在本地仓库，默认是「用户目录 / .m2 / repository」。第一次构建慢就是因为在下载，之后会走缓存。"
+      },
+      {
+        "type": "h2",
+        "text": "三、常用命令"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "mvn clean —— 删掉 target 目录",
+          "mvn compile —— 编译源码到 target/classes",
+          "mvn package —— 打包成 jar 或 war",
+          "mvn spring-boot:run —— 直接启动 Spring Boot 应用"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "国内下载慢的话，可以在 settings.xml 里配一个阿里云镜像，速度会快很多。"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "2027 届软件工程：我的学习路线与踩坑记录",
+    "summary": "从大一的 C 语言到大三开始系统学 Java 后端，记录这三年里真正有用的学习方法和走过的弯路。",
+    "category": "学习笔记",
+    "tags": [
+      "学习方法",
+      "职业规划"
+    ],
+    "date": "2026-05-22",
+    "readingTime": 6,
+    "cover": "linear-gradient(135deg, #64748b, #334155)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "写这篇不是分享成功经验，而是记录踩过的坑，希望能帮你少走一点弯路。"
+      },
+      {
+        "type": "h2",
+        "text": "一、先学一门语言，学深一点"
+      },
+      {
+        "type": "p",
+        "text": "一开始我贪多，Java、Python、C++ 一起看，结果哪门都只停在了「看得懂」。后来集中两个月只写 Java，才真正有了手感。"
+      },
+      {
+        "type": "h2",
+        "text": "二、一定要动手做完整的东西"
+      },
+      {
+        "type": "p",
+        "text": "看视频跟着敲和独立做一个完整项目，中间的差距非常大。跟着敲时你不需要做任何决策，独立做时每个选择都要自己想。"
+      },
+      {
+        "type": "h2",
+        "text": "三、把项目写进简历之前，先确认自己能讲清楚"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "这个功能为什么这么设计，换个方案行不行",
+          "遇到过什么问题，最后怎么定位和解决的",
+          "代码为什么放在这一层，而不是另一层"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "面试官问的不是「你做过什么」，而是「你是不是真的理解你做过的东西」。"
+      },
+      {
+        "type": "h2",
+        "text": "四、接下来的计划"
+      },
+      {
+        "type": "p",
+        "text": "继续把 Spring Boot 和 MySQL 学扎实，完成一个前后端分离的完整项目，补齐 Git 和 Linux 的使用，然后认真准备秋招。"
+      }
+    ]
+  }
+]
