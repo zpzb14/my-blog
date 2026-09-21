@@ -9,13 +9,13 @@
       "面向对象"
     ],
     "date": "2026-08-18",
-    "readingTime": 8,
+    "readingTime": 12,
     "cover": "linear-gradient(135deg, #2f6bff, #5b8cff)",
     "views": 0,
     "content": [
       {
         "type": "p",
-        "text": "刚开始学 Java 的时候，封装、继承、多态这三个词几乎每天都会看到，但真正理解它们为什么存在，往往要写上一阵子代码。这篇文章用一个小例子把它们串起来。"
+        "text": "刚开始学 Java 时，封装、继承、多态这三个词几乎每天都会看到，但真正理解它们为什么存在，往往要写上一阵子代码。这篇文章用一个小例子把它们串起来。"
       },
       {
         "type": "h2",
@@ -23,7 +23,7 @@
       },
       {
         "type": "p",
-        "text": "封装的核心是「不让外部随意修改内部状态」。做法是把字段设为 private，只暴露必要的方法。"
+        "text": "封装的核心是「不让外部随意修改内部状态」。做法是把字段设为 private，只暴露必要的方法。好处是校验逻辑集中在一处，日后要改只改一个地方。"
       },
       {
         "type": "code",
@@ -31,7 +31,7 @@
       },
       {
         "type": "p",
-        "text": "这样外部就无法把 age 设成 -1。校验逻辑集中在 setter 里，日后要改只改一处。"
+        "text": "如果没有封装，外部可以直接写 student.age = -1，程序里就潜伏了一个永远不该出现的值。等到某天算平均年龄才发现，排查成本非常高。"
       },
       {
         "type": "h2",
@@ -39,7 +39,15 @@
       },
       {
         "type": "p",
-        "text": "继承让子类直接拥有父类的属性和方法，用 extends 关键字。注意 Java 只支持单继承。"
+        "text": "继承让子类直接拥有父类的属性和方法，用 extends 关键字。注意 Java 只支持单继承，一个类只能有一个直接父类。"
+      },
+      {
+        "type": "code",
+        "text": "public class Animal {\n    protected String name;\n\n    public void eat() {\n        System.out.println(name + \" 在吃东西\");\n    }\n}\n\npublic class Dog extends Animal {\n    public void bark() {\n        System.out.println(name + \" 在叫\");   // 直接用父类的 name\n    }\n}"
+      },
+      {
+        "type": "p",
+        "text": "继承适用的场景是 is-a 关系：狗是动物，所以 Dog 继承 Animal。如果只是 has-a（学生有手机），应该用组合——把手机作为字段，而不是继承。"
       },
       {
         "type": "h2",
@@ -47,30 +55,54 @@
       },
       {
         "type": "p",
-        "text": "多态建立在继承和方法重写之上，父类引用指向子类对象，运行时才决定调用哪个实现。"
+        "text": "多态建立在继承和方法重写之上：父类引用指向子类对象，运行时才决定调用哪个实现。"
       },
       {
         "type": "code",
-        "text": "Animal a = new Dog();\na.speak();   // 输出「汪汪」，调用的是 Dog 重写后的方法"
+        "text": "public class Dog extends Animal {\n    @Override\n    public void eat() {\n        System.out.println(name + \" 在啃骨头\");\n    }\n}\n\nAnimal a = new Dog();\na.eat();     // 输出「在啃骨头」，调用的是 Dog 重写后的方法"
+      },
+      {
+        "type": "p",
+        "text": "多态真正有用的地方在于扩展时不用改调用方代码。下面这个方法，以后新增 Cat、Bird 都不用动一行。"
+      },
+      {
+        "type": "code",
+        "text": "public void feedAll(List<Animal> animals) {\n    for (Animal a : animals) {\n        a.eat();     // 各自执行自己的实现\n    }\n}"
+      },
+      {
+        "type": "h2",
+        "text": "四、三者之间的关系"
       },
       {
         "type": "ul",
         "items": [
-          "封装解决「数据安全」问题",
-          "继承解决「代码复用」问题",
-          "多态解决「扩展性」问题，新增子类不用改调用方代码"
+          "封装解决「数据安全」：不允许外部绕过规则修改内部状态",
+          "继承解决「代码复用」：公共逻辑写在父类，子类只写差异部分",
+          "多态解决「扩展性」：新增子类不需要修改已有的调用代码"
         ]
       },
       {
         "type": "p",
-        "text": "把这三件事对应到它们要解决的问题上，比死记定义有用得多。"
+        "text": "把这三件事对应到它们各自要解决的问题上，比死记定义有用得多。面试被问到时，先说「它解决什么问题」，再补语法细节。"
+      },
+      {
+        "type": "h2",
+        "text": "常见追问"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "重写与重载的区别：重写是子类改写父类方法，方法签名相同；重载是同一个类里方法名相同但参数列表不同",
+          "抽象类和接口怎么选：抽象类表达「是什么」，接口表达「能做什么」；一个类只能继承一个抽象类，但可以实现多个接口",
+          "为什么父类引用不能调用子类特有方法：编译期只看引用类型，Dog 特有的 bark() 通过 Animal 引用调不到，需要向下转型"
+        ]
       }
     ]
   },
   {
     "id": 2,
     "title": "MySQL 索引入门：为什么加了索引查询就快了",
-    "summary": "B+ 树到底长什么样？为什么索引能加速查询，又为什么索引不是越多越好？用一张表的数据量变化说明白。",
+    "summary": "B+ 树到底长什么样？为什么索引能加速查询，又为什么索引不是越多越好？用数据量的变化说明白。",
     "category": "数据库",
     "tags": [
       "MySQL",
@@ -78,13 +110,13 @@
       "SQL"
     ],
     "date": "2026-08-05",
-    "readingTime": 10,
+    "readingTime": 13,
     "cover": "linear-gradient(135deg, #0ea5a5, #38bdf8)",
     "views": 0,
     "content": [
       {
         "type": "p",
-        "text": "很多人知道「加索引能变快」，但说不清楚为什么。这篇文章从数据查找方式讲起。"
+        "text": "很多人知道「加索引能变快」，但说不清楚为什么。这篇文章从数据查找方式讲起，把原理和实际用法连起来。"
       },
       {
         "type": "h2",
@@ -92,7 +124,7 @@
       },
       {
         "type": "p",
-        "text": "如果没有索引，MySQL 只能从第一行开始逐行比对，这叫全表扫描。数据量到十万行时，一次查询可能要扫十万行。"
+        "text": "如果没有索引，MySQL 只能从第一行开始逐行比对，这叫全表扫描。十万行数据意味着最坏情况要比较十万次，这是慢查询的主要来源。"
       },
       {
         "type": "h2",
@@ -100,47 +132,76 @@
       },
       {
         "type": "p",
-        "text": "索引把字段值有序组织成一棵 B+ 树。查找时从根节点逐层向下，每层只比较几次，就能定位到目标数据。"
+        "text": "索引把某个字段的值有序组织成一棵 B+ 树。查找时从根节点逐层向下，每层只需要几次比较就能把范围缩小到很小。"
       },
       {
         "type": "code",
-        "text": "-- 在 name 字段建索引\nCREATE INDEX idx_student_name ON student(name);\n\n-- 查看执行计划，重点看 type 和 rows\nEXPLAIN SELECT * FROM student WHERE name = '张三';"
+        "text": "-- 在 name 字段上建索引\nCREATE INDEX idx_student_name ON student(name);\n\n-- 用 EXPLAIN 看执行计划，重点看 type 和 rows\nEXPLAIN SELECT * FROM student WHERE name = '张三';"
+      },
+      {
+        "type": "p",
+        "text": "EXPLAIN 结果里，type 是 ALL 表示全表扫描，ref 或 range 说明用上了索引；rows 是预估扫描行数，越小越好。"
       },
       {
         "type": "h2",
-        "text": "三、索引不是越多越好"
+        "text": "三、最左前缀原则"
+      },
+      {
+        "type": "p",
+        "text": "联合索引 (a, b, c) 相当于建立了 a、(a,b)、(a,b,c) 三个索引。查询条件必须从最左列开始连续匹配才能用上。"
+      },
+      {
+        "type": "code",
+        "text": "-- 能用到索引\nSELECT * FROM t WHERE a = 1;\nSELECT * FROM t WHERE a = 1 AND b = 2;\n\n-- 用不到索引（跳过了最左列 a）\nSELECT * FROM t WHERE b = 2;"
+      },
+      {
+        "type": "h2",
+        "text": "四、索引不是越多越好"
       },
       {
         "type": "ul",
         "items": [
-          "索引本身要占磁盘空间",
-          "每次 INSERT / UPDATE / DELETE 都要同步维护索引，写入会变慢",
-          "如果查询条件用不到索引（比如对字段做了函数运算），索引会失效"
+          "索引本身要占用磁盘空间",
+          "每次 INSERT / UPDATE / DELETE 都要同步维护索引，写入性能会下降",
+          "对字段做函数运算会导致索引失效，例如 WHERE YEAR(created_at) = 2026",
+          "区分度低的字段（如性别）建索引收益很小"
         ]
       },
       {
         "type": "p",
-        "text": "通常只给「经常出现在 WHERE、ORDER BY、JOIN 里」的字段建索引就够了。"
+        "text": "通常只给经常出现在 WHERE、ORDER BY、JOIN 里，且区分度高的字段建索引就够了。"
+      },
+      {
+        "type": "h2",
+        "text": "五、几个常见误区"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "LIKE 前置通配符用不到索引：LIKE 关键字% 可以，LIKE %关键字 不行",
+          "OR 连接的条件如果有一侧没索引，整体可能退化为全表扫描",
+          "返回大量数据时优化器可能主动放弃索引，这是正常决策，不是失效"
+        ]
       }
     ]
   },
   {
     "id": 3,
     "title": "Git 从入门到够用：只需要记住这几个命令",
-    "summary": "不用背几十个 Git 命令。掌握 add / commit / push / pull / branch / merge 这几个，日常开发就够了。",
+    "summary": "不用背几十个 Git 命令。掌握 add / commit / push / pull / branch / merge，日常开发就够了。",
     "category": "开发工具",
     "tags": [
       "Git",
       "版本控制"
     ],
     "date": "2026-07-28",
-    "readingTime": 7,
+    "readingTime": 11,
     "cover": "linear-gradient(135deg, #f97316, #f59e0b)",
     "views": 0,
     "content": [
       {
         "type": "p",
-        "text": "Git 的命令很多，但日常真正高频使用的就那么几个。先把这条主线走通。"
+        "text": "Git 的命令很多，但日常真正高频使用的就那么几个。先把这条主线走通，遇到问题再查。"
       },
       {
         "type": "h2",
@@ -151,134 +212,216 @@
         "text": "git status              # 看当前有哪些改动\ngit add .               # 把改动放进暂存区\ngit commit -m \"说明\"     # 提交到本地仓库\ngit push                # 推送到远程仓库"
       },
       {
+        "type": "p",
+        "text": "这四步覆盖了 80% 的日常操作，剩下的基本都是在这条链路上做变体。"
+      },
+      {
         "type": "h2",
         "text": "二、多人协作必备"
       },
       {
         "type": "code",
-        "text": "git pull                # 拉取远程最新代码\ngit checkout -b feature # 新建并切换到分支\ngit merge feature       # 把分支合并回主分支"
+        "text": "git pull                        # 拉取远程最新代码\ngit checkout -b feature-login   # 新建并切换到分支\ngit merge feature-login         # 把分支合并回当前分支\ngit branch -d feature-login     # 删除已合并的分支"
       },
       {
         "type": "h2",
-        "text": "三、几个实用习惯"
+        "text": "三、改错了怎么回退"
+      },
+      {
+        "type": "code",
+        "text": "git restore 文件名          # 丢弃工作区的修改\ngit restore --staged 文件名  # 把文件移出暂存区\ngit reset --soft HEAD~1     # 撤销最近一次提交，保留改动\ngit revert <commit-id>      # 生成一个反向提交，安全"
+      },
+      {
+        "type": "p",
+        "text": "已经 push 出去的历史不要用 reset 改写，要用 revert 生成反向提交，否则会给协作者制造麻烦。"
+      },
+      {
+        "type": "h2",
+        "text": "四、一个好用的排查命令"
+      },
+      {
+        "type": "code",
+        "text": "git log --oneline --graph --all"
+      },
+      {
+        "type": "p",
+        "text": "这条命令用图形化方式显示所有分支的提交历史，排查「代码怎么没了」这类问题特别有用。"
+      },
+      {
+        "type": "h2",
+        "text": "五、应该养成的习惯"
       },
       {
         "type": "ul",
         "items": [
-          "每次提交只做一件事，提交信息写清楚「做了什么」",
-          "每天开工前先 pull，避免冲突堆积",
+          "每次提交只做一件事，提交信息写清楚「做了什么」而不是「改了啥」",
+          "每天开工前先 pull，避免冲突堆积到最后一起爆发",
           "给项目加 .gitignore，把 node_modules、target、.idea 排除掉",
-          "不要提交密码、密钥等敏感信息"
+          "绝对不要提交密码、密钥、token 等敏感信息",
+          "提交前用 git diff 看一眼自己改了什么，避免误提交调试代码"
         ]
-      },
-      {
-        "type": "p",
-        "text": "把这些养成习惯，简历上写「使用 Git 进行版本管理」才站得住脚。"
       }
     ]
   },
   {
     "id": 4,
     "title": "Vue 3 组合式 API：ref 和 reactive 该怎么选",
-    "summary": "setup 语法糖、ref、reactive、computed、watch —— 用一个计数器例子讲清楚 Vue 3 的数据响应式。",
+    "summary": "setup 语法糖、ref、reactive、computed、watch —— 用一个计数器讲清楚 Vue 3 的数据响应式。",
     "category": "前端开发",
     "tags": [
       "Vue",
       "JavaScript"
     ],
     "date": "2026-07-15",
-    "readingTime": 9,
+    "readingTime": 12,
     "cover": "linear-gradient(135deg, #42b883, #2f9e6e)",
     "views": 0,
     "content": [
       {
         "type": "p",
-        "text": "Vue 3 的组合式 API 让逻辑可以按功能组织，而不是按选项堆在 data、methods 里。"
+        "text": "Vue 3 的组合式 API 让逻辑可以按功能组织，而不是按选项散落在 data、methods、computed 里。"
       },
       {
         "type": "h2",
-        "text": "一、<script setup> 是最常用的写法"
+        "text": "一、script setup 是最常用的写法"
       },
       {
         "type": "code",
-        "text": "<script setup>\nimport { ref, computed } from 'vue'\n\nconst count = ref(0)\nconst double = computed(() => count.value * 2)\n\nfunction increment() {\n  count.value++\n}\n</script>"
+        "text": "<script setup>\nimport { ref, computed } from 'vue'\n\nconst count = ref(0)\nconst double = computed(() => count.value * 2)\n\nfunction increment() {\n  count.value++\n}\n</script>\n\n<template>\n  <button @click=\"increment\">{{ count }} / {{ double }}</button>\n</template>"
       },
       {
         "type": "h2",
-        "text": "二、ref 还是 reactive"
+        "text": "二、ref 和 reactive 的区别"
       },
       {
         "type": "ul",
         "items": [
-          "ref 可以包装任意类型（数字、字符串、对象、数组），用的时候要加 .value",
-          "reactive 只能传对象，访问时不用 .value，但解构会丢失响应性",
-          "推荐：基本类型用 ref，对象也优先用 ref，一致性更好"
+          "ref 可以包装任意类型（数字、字符串、对象、数组），在 script 里要用 .value 访问",
+          "reactive 只能传对象，访问时不用 .value，但解构会直接丢失响应性",
+          "推荐统一用 ref：一致性更好，也不容易踩解构的坑"
         ]
       },
       {
+        "type": "p",
+        "text": "最容易踩的坑是忘了写 .value：数据看起来改了，但页面不动，排查半天。"
+      },
+      {
         "type": "h2",
-        "text": "三、在模板里不用写 .value"
+        "text": "三、模板里不用写 .value"
       },
       {
         "type": "p",
-        "text": "Vue 在模板中会自动解包 ref，所以模板里直接写 {{ count }} 就行。只有在 script 里才需要 count.value。"
+        "text": "Vue 在模板中会自动解包 ref，所以模板里直接写 {{ count }} 就行，只有 script 里才需要 count.value。"
+      },
+      {
+        "type": "h2",
+        "text": "四、computed 和 watch 怎么选"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "computed 用于派生状态：依赖别人算出来的值，有缓存，依赖不变就不重算",
+          "watch 用于副作用：数据变化后要发请求、操作 DOM、写 localStorage 时用它",
+          "能用 computed 表达的就别用 watch，前者更简洁也不容易写出循环依赖"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "// 好：用 computed 表达派生\nconst fullName = computed(() => firstName.value + lastName.value)\n\n// 不好：用 watch 手动同步两个变量，容易不同步\nwatch(firstName, () => { fullName2.value = firstName.value + lastName.value })"
+      },
+      {
+        "type": "h2",
+        "text": "五、生命周期怎么用"
+      },
+      {
+        "type": "code",
+        "text": "import { onMounted, onUnmounted } from 'vue'\n\nonMounted(() => { /* 组件挂载后 */ })\nonUnmounted(() => { /* 组件销毁前清理定时器/监听 */ })"
       },
       {
         "type": "p",
-        "text": "这一条是最容易踩的坑：忘了加 .value，数据不动，排查半天。"
+        "text": "发请求放 onMounted，清理定时器和事件监听放 onUnmounted——后者经常被忽略，长期运行的单页应用会因此内存泄漏。"
       }
     ]
   },
   {
     "id": 5,
-    "title": "Flex 布局实战：一个响应式卡片列表的完整写法",
-    "summary": "从 display:flex 的三个核心属性讲起，最后落地成一个桌面三列、手机单列的卡片网格。",
+    "title": "Flex 与 Grid 布局实战：一个响应式卡片列表的完整写法",
+    "summary": "从 Flex 的主轴交叉轴讲起，最后落地成桌面三列、平板两列、手机单列的卡片网格。",
     "category": "前端开发",
     "tags": [
       "CSS",
       "Flex",
+      "Grid",
       "响应式"
     ],
     "date": "2026-07-02",
-    "readingTime": 8,
+    "readingTime": 11,
     "cover": "linear-gradient(135deg, #a855f7, #7c3aed)",
     "views": 0,
     "content": [
       {
         "type": "p",
-        "text": "Flex 布局最常被问的就是主轴和交叉轴。搞清楚这两根轴，属性就都说得通了。"
+        "text": "Flex 和 Grid 不是二选一的关系：一维排列用 Flex，二维网格用 Grid。这篇文章把两者放在同一个场景里对比。"
       },
       {
         "type": "h2",
-        "text": "一、三个必须记住的属性"
+        "text": "一、Flex 的三个核心属性"
       },
       {
         "type": "code",
-        "text": ".container {\n  display: flex;\n  justify-content: space-between;  /* 主轴对齐 */\n  align-items: center;            /* 交叉轴对齐 */\n  gap: 16px;                      /* 间距，比 margin 更好用 */\n}"
-      },
-      {
-        "type": "h2",
-        "text": "二、让卡片自动换行"
-      },
-      {
-        "type": "code",
-        "text": ".list {\n  display: flex;\n  flex-wrap: wrap;   /* 放不下就换行 */\n  gap: 24px;\n}\n\n.item {\n  flex: 1 1 300px;   /* 最小 300px，有空间就拉伸 */\n}"
-      },
-      {
-        "type": "h2",
-        "text": "三、更推荐用 Grid 做网格"
+        "text": ".nav {\n  display: flex;\n  justify-content: space-between;  /* 主轴对齐 */\n  align-items: center;            /* 交叉轴对齐 */\n  gap: 16px;                      /* 间距，比 margin 更好用 */\n}"
       },
       {
         "type": "p",
-        "text": "如果只是整齐的等宽网格，CSS Grid 比 Flex 更省事，一行代码就能定义列数。"
+        "text": "flex-direction 决定主轴方向。默认 row 是横向，所以 justify-content 控制水平对齐；改成 column 后主轴变垂直，两者正好互换。"
+      },
+      {
+        "type": "h2",
+        "text": "二、让元素自由伸缩"
       },
       {
         "type": "code",
-        "text": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n  gap: 24px;\n}\n\n@media (max-width: 900px) {\n  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n}\n\n@media (max-width: 600px) {\n  .grid { grid-template-columns: minmax(0, 1fr); }\n}"
+        "text": ".item {\n  flex: 1 1 300px;   /* 放大 | 缩小 | 基准宽度 300px */\n}"
       },
       {
         "type": "p",
-        "text": "minmax(0, 1fr) 里的 0 很关键：不加的话，内容过宽会把网格撑破。"
+        "text": "这行的意思是：有空间就一起放大，空间不够就缩小，但基准宽度是 300px。比固定 width 更能适应不同屏幕。"
+      },
+      {
+        "type": "h2",
+        "text": "三、网格布局用 Grid 更省事"
+      },
+      {
+        "type": "code",
+        "text": ".article-grid {\n  display: grid;\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n  gap: 24px;\n}\n\n@media (max-width: 900px) {\n  .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n}\n\n@media (max-width: 600px) {\n  .article-grid { grid-template-columns: minmax(0, 1fr); }\n}"
+      },
+      {
+        "type": "p",
+        "text": "minmax(0, 1fr) 里的 0 很关键：写成 1fr 的话，内容过宽会把网格撑破，出现横向滚动条。放长英文单词或长 URL 时这个问题特别明显。"
+      },
+      {
+        "type": "h2",
+        "text": "四、媒体查询的断点怎么定"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "不要照抄别人的断点，按自己的内容决定——内容开始挤压的地方就是断点",
+          "常见起点：600px（手机）、900px（平板）、1200px（小笔记本）",
+          "移动端优先：先写小屏样式，再用 min-width 往上加"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "五、验证有没有问题"
+      },
+      {
+        "type": "code",
+        "text": "// 在浏览器控制台跑一下，大于 0 说明有横向溢出\ndocument.documentElement.scrollWidth - document.documentElement.clientWidth"
+      },
+      {
+        "type": "p",
+        "text": "这个检查应该放进每个项目的验收清单。横向溢出是响应式最常见的翻车点，而且它往往只在某一两个宽度下出现。"
       }
     ]
   },
@@ -292,7 +435,7 @@
       "HTTP"
     ],
     "date": "2026-06-20",
-    "readingTime": 7,
+    "readingTime": 11,
     "cover": "linear-gradient(135deg, #ec4899, #db2777)",
     "views": 0,
     "content": [
@@ -306,41 +449,69 @@
       },
       {
         "type": "code",
-        "text": "const request = axios.create({\n  baseURL: '/api',\n  timeout: 10000\n})"
-      },
-      {
-        "type": "h2",
-        "text": "二、响应拦截器统一处理"
-      },
-      {
-        "type": "code",
-        "text": "request.interceptors.response.use(\n  (response) => {\n    const res = response.data\n    if (res.code === 0 || res.code === 200) return res.data\n    return Promise.reject(new Error(res.message || '接口异常'))\n  },\n  (error) => {\n    let message = '网络异常，请稍后重试'\n    if (error.code === 'ECONNABORTED') message = '请求超时'\n    else if (error.response) message = `请求失败（HTTP ${error.response.status}）`\n    return Promise.reject(new Error(message))\n  }\n)"
-      },
-      {
-        "type": "h2",
-        "text": "三、组件里就干净了"
-      },
-      {
-        "type": "code",
-        "text": "try {\n  loading.value = true\n  articles.value = await fetchArticles()\n} catch (e) {\n  error.value = e.message\n} finally {\n  loading.value = false\n}"
+        "text": "const request = axios.create({\n  baseURL: import.meta.env.BASE_URL,   // 跟随构建时的 base 路径\n  timeout: 10000,\n  headers: { 'Content-Type': 'application/json' }\n})"
       },
       {
         "type": "p",
-        "text": "loading 和 error 两个状态一定要显式处理，否则用户点进去看到一片空白，不知道是没数据还是加载失败。"
+        "text": "baseURL 用 import.meta.env.BASE_URL 而不是写死 /，这样部署到子路径（如 GitHub Pages 的 /my-blog/）时接口请求会自动带上正确前缀。"
+      },
+      {
+        "type": "h2",
+        "text": "二、请求拦截器：统一加东西"
+      },
+      {
+        "type": "code",
+        "text": "request.interceptors.request.use((config) => {\n  const token = localStorage.getItem('token')\n  if (token) config.headers.Authorization = 'Bearer ' + token\n  return config\n})"
+      },
+      {
+        "type": "p",
+        "text": "日后接入 JWT 鉴权时，只需要在这里加一行，所有接口自动带上。"
+      },
+      {
+        "type": "h2",
+        "text": "三、响应拦截器：统一剥壳和报错"
+      },
+      {
+        "type": "code",
+        "text": "request.interceptors.response.use(\n  (response) => {\n    const res = response.data\n    if (res.code === 0 || res.code === 200) return res.data\n    return Promise.reject(new Error(res.message || '接口异常'))\n  },\n  (error) => {\n    let message = '网络异常，请稍后重试'\n    if (error.code === 'ECONNABORTED') message = '请求超时'\n    else if (error.response) message = '请求失败（HTTP ' + error.response.status + '）'\n    return Promise.reject(new Error(message))\n  }\n)"
+      },
+      {
+        "type": "h2",
+        "text": "四、组件里就干净了"
+      },
+      {
+        "type": "code",
+        "text": "const articles = ref([])\nconst loading = ref(true)\nconst error = ref('')\n\ntry {\n  articles.value = await fetchArticles()\n} catch (e) {\n  error.value = e.message\n} finally {\n  loading.value = false\n}"
+      },
+      {
+        "type": "p",
+        "text": "loading 和 error 两个状态一定要显式处理。否则用户点进去看到一片空白，不知道是没数据、还在加载，还是请求失败了。"
+      },
+      {
+        "type": "h2",
+        "text": "五、并发请求"
+      },
+      {
+        "type": "code",
+        "text": "const [articles, tags] = await Promise.all([\n  fetchArticles(),\n  fetchTags()\n])"
+      },
+      {
+        "type": "p",
+        "text": "两个请求互不依赖时用 Promise.all 并行发出，比串行 await 快将近一倍。"
       }
     ]
   },
   {
     "id": 7,
     "title": "Maven 到底在做什么：依赖、生命周期与 pom.xml",
-    "summary": "为什么 Java 项目要有个 pom.xml？依赖从哪来？mvn compile 背后跑了什么？把 Maven 的核心概念一次讲清。",
-    "category": "Java 后端",
+    "summary": "为什么 Java 项目要有个 pom.xml？依赖从哪来？mvn compile 背后跑了什么？",
+    "category": "开发工具",
     "tags": [
       "Maven",
       "构建工具"
     ],
     "date": "2026-06-06",
-    "readingTime": 9,
+    "readingTime": 12,
     "cover": "linear-gradient(135deg, #6366f1, #4f46e5)",
     "views": 0,
     "content": [
@@ -358,7 +529,7 @@
       },
       {
         "type": "p",
-        "text": "Maven 根据这三行（groupId / artifactId / version，简称 GAV）去仓库里下载对应的 jar，并自动把它的间接依赖也一起拉下来。"
+        "text": "Maven 根据这三行（groupId / artifactId / version，简称 GAV）去仓库下载对应的 jar，并自动把它的间接依赖一起拉下来——这就是为什么加一个 starter 会引入几十个包。"
       },
       {
         "type": "h2",
@@ -366,38 +537,63 @@
       },
       {
         "type": "p",
-        "text": "下载下来的包会缓存在本地仓库，默认是「用户目录 / .m2 / repository」。第一次构建慢就是因为在下载，之后会走缓存。"
+        "text": "下载下来的包缓存在本地仓库，默认是「用户目录 / .m2 / repository」。第一次构建慢就是因为在下载，之后会走缓存。"
+      },
+      {
+        "type": "p",
+        "text": "如果 C 盘空间紧张，可以在 settings.xml 里把仓库指到别的盘，顺带配上国内镜像加速："
+      },
+      {
+        "type": "code",
+        "text": "<settings>\n  <localRepository>F:\\maven-repo</localRepository>\n  <mirrors>\n    <mirror>\n      <id>aliyun</id>\n      <url>https://maven.aliyun.com/repository/public</url>\n      <mirrorOf>central</mirrorOf>\n    </mirror>\n  </mirrors>\n</settings>"
       },
       {
         "type": "h2",
-        "text": "三、常用命令"
+        "text": "三、最常用的几条命令"
       },
       {
         "type": "ul",
         "items": [
           "mvn clean —— 删掉 target 目录",
           "mvn compile —— 编译源码到 target/classes",
+          "mvn test —— 运行单元测试",
           "mvn package —— 打包成 jar 或 war",
           "mvn spring-boot:run —— 直接启动 Spring Boot 应用"
         ]
       },
       {
+        "type": "h2",
+        "text": "四、依赖冲突怎么办"
+      },
+      {
         "type": "p",
-        "text": "国内下载慢的话，可以在 settings.xml 里配一个阿里云镜像，速度会快很多。"
+        "text": "两个依赖间接引入了同一个库的不同版本时，Maven 按「最短路径优先、先声明优先」选择。查看完整依赖树："
+      },
+      {
+        "type": "code",
+        "text": "mvn dependency:tree"
+      },
+      {
+        "type": "p",
+        "text": "如果选中的版本有问题，可以显式排除："
+      },
+      {
+        "type": "code",
+        "text": "<dependency>\n  <groupId>com.example</groupId>\n  <artifactId>some-lib</artifactId>\n  <version>1.0</version>\n  <exclusions>\n    <exclusion>\n      <groupId>commons-logging</groupId>\n      <artifactId>commons-logging</artifactId>\n    </exclusion>\n  </exclusions>\n</dependency>"
       }
     ]
   },
   {
     "id": 8,
     "title": "2027 届软件工程：我的学习路线与踩坑记录",
-    "summary": "从大一的 C 语言到大三开始系统学 Java 后端，记录这三年里真正有用的学习方法和走过的弯路。",
+    "summary": "从 C 语言到 Java 后端，记录这几年的学习方法、走过的弯路，以及接下来的计划。",
     "category": "学习笔记",
     "tags": [
       "学习方法",
       "职业规划"
     ],
     "date": "2026-05-22",
-    "readingTime": 6,
+    "readingTime": 10,
     "cover": "linear-gradient(135deg, #64748b, #334155)",
     "views": 0,
     "content": [
@@ -411,7 +607,11 @@
       },
       {
         "type": "p",
-        "text": "一开始我贪多，Java、Python、C++ 一起看，结果哪门都只停在了「看得懂」。后来集中两个月只写 Java，才真正有了手感。"
+        "text": "一开始我贪多，Java、Python、C++ 一起看，结果哪门都只停在「看得懂」。后来集中两个月只写 Java，才真正有了手感。"
+      },
+      {
+        "type": "p",
+        "text": "「看得懂」和「写得出来」之间隔着一整个调试过程。而调试能力，恰恰是面试官最想确认的东西。"
       },
       {
         "type": "h2",
@@ -419,7 +619,15 @@
       },
       {
         "type": "p",
-        "text": "看视频跟着敲和独立做一个完整项目，中间的差距非常大。跟着敲时你不需要做任何决策，独立做时每个选择都要自己想。"
+        "text": "看视频跟着敲，和独立做一个完整项目，差距非常大。跟着敲时你不需要做任何决策；独立做时每个选择都要自己想：数据怎么存、组件怎么拆、请求失败怎么办。"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "从「能跑起来」开始，不要一上来就追求架构完美",
+          "遇到报错先自己读异常栈，再搜索，最后才问人",
+          "做完一个功能就提交一次 Git，方便回退也留下记录"
+        ]
       },
       {
         "type": "h2",
@@ -439,11 +647,1266 @@
       },
       {
         "type": "h2",
-        "text": "四、接下来的计划"
+        "text": "四、部署是很好的加分项"
       },
       {
         "type": "p",
-        "text": "继续把 Spring Boot 和 MySQL 学扎实，完成一个前后端分离的完整项目，补齐 Git 和 Linux 的使用，然后认真准备秋招。"
+        "text": "很多人做完项目只在本地跑过。真正部署上线会遇到一堆本地不会出现的问题：资源 404、路由 404、环境变量不同、构建产物路径不对。"
+      },
+      {
+        "type": "p",
+        "text": "比如我的博客部署到 GitHub Pages 子路径后，首页直接变成了 404 页——排查发现是路由 base 和构建 base 不一致。这种经历比单纯写页面更能体现工程能力。"
+      },
+      {
+        "type": "h2",
+        "text": "五、接下来的计划"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "把 Spring Boot 和 MySQL 学扎实，完成一个前后端分离的完整项目",
+          "补齐 Linux 常用命令与基本运维能力",
+          "认真准备秋招，把每个项目都准备成能讲十五分钟"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Java 集合框架：ArrayList 和 LinkedList 到底怎么选",
+    "summary": "底层一个是数组一个是双向链表，插入删除的性能差异到底有多大？用场景而不是背结论来判断。",
+    "category": "Java 后端",
+    "tags": [
+      "Java",
+      "集合",
+      "数据结构"
+    ],
+    "date": "2026-05-10",
+    "readingTime": 12,
+    "cover": "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "面试常问「ArrayList 和 LinkedList 的区别」，很多人背「一个查得快、一个增删快」。但这句话有不小的问题，用错场景反而更慢。"
+      },
+      {
+        "type": "h2",
+        "text": "一、底层结构"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "ArrayList 底层是 Object 数组，支持随机访问，内存连续",
+          "LinkedList 底层是双向链表，每个节点额外存前后指针"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "二、随机访问"
+      },
+      {
+        "type": "code",
+        "text": "List<Integer> list = new ArrayList<>();\nlist.get(1000000);   // O(1)，直接算下标\n\nList<Integer> linked = new LinkedList<>();\nlinked.get(1000000); // O(n)，要从头一个个走"
+      },
+      {
+        "type": "p",
+        "text": "这是 LinkedList 最容易被忽视的劣势：get(i) 是 O(n)。写 for (int i = 0; i < list.size(); i++) list.get(i) 这种循环，LinkedList 会慢到不可接受。"
+      },
+      {
+        "type": "h2",
+        "text": "三、插入删除的真实性能"
+      },
+      {
+        "type": "p",
+        "text": "「LinkedList 增删快」只在特定条件下成立："
+      },
+      {
+        "type": "ul",
+        "items": [
+          "按索引插入：ArrayList 要搬移后续元素 O(n)，LinkedList 要先遍历到位置也是 O(n)，两者都是 O(n)，但 ArrayList 的搬移是连续内存操作，实际往往更快",
+          "头部插入：LinkedList 是 O(1)，ArrayList 要整体搬移 O(n)——这才是 LinkedList 真正有优势的场景",
+          "迭代中删除：两者都可以用 Iterator.remove() 做到 O(1)，这时差别不大"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "四、内存占用"
+      },
+      {
+        "type": "p",
+        "text": "LinkedList 每个节点要额外存两个指针（64 位 JVM 上通常 16 字节），而且对象分散在堆上，缓存局部性差。存一百万个整数，LinkedList 的内存占用可能是 ArrayList 的好几倍。"
+      },
+      {
+        "type": "h2",
+        "text": "五、实际上应该怎么选"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "99% 的场景直接用 ArrayList，包括需要频繁增删的情况",
+          "需要大量头部插入且只在两端操作时，考虑 ArrayDeque 而不是 LinkedList",
+          "需要按 key 查找用 HashMap，需要去重用 HashSet",
+          "需要线程安全用 ConcurrentHashMap 或 CopyOnWriteArrayList，不要自己加 synchronized 包一层"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "// 需要频繁在两端操作的场景：ArrayDeque\nDeque<Integer> dq = new ArrayDeque<>();\ndq.addFirst(1);\ndq.addLast(2);"
+      },
+      {
+        "type": "p",
+        "text": "结论：先默认 ArrayList，等到真的遇到性能问题、并用数据证明了瓶颈，再考虑换实现。凭「增删快」这三个字提前换成 LinkedList，是常见的反优化。"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Java 异常处理：try-catch-finally 的执行顺序",
+    "summary": "finally 一定会执行吗？return 在 try 里，finally 的 return 会覆盖它吗？把几个反直觉的点讲清楚。",
+    "category": "Java 后端",
+    "tags": [
+      "Java",
+      "异常"
+    ],
+    "date": "2026-04-26",
+    "readingTime": 11,
+    "cover": "linear-gradient(135deg, #0891b2, #0e7490)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "异常处理看起来简单，但有几个行为相当反直觉，面试也很爱问。"
+      },
+      {
+        "type": "h2",
+        "text": "一、基本结构"
+      },
+      {
+        "type": "code",
+        "text": "try {\n    // 可能出错的代码\n} catch (IOException e) {\n    // 处理异常\n} finally {\n    // 无论是否出错都会执行，通常用来释放资源\n}"
+      },
+      {
+        "type": "h2",
+        "text": "二、finally 一定执行吗"
+      },
+      {
+        "type": "p",
+        "text": "几乎一定，但有两种例外："
+      },
+      {
+        "type": "ul",
+        "items": [
+          "JVM 被强制退出（System.exit 或进程被杀）",
+          "finally 所在的线程被强制中断并终止"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "要注意的是：如果 catch 里也抛了异常，finally 仍然会先执行，然后才把异常抛出去。"
+      },
+      {
+        "type": "h2",
+        "text": "三、return 和 finally 的顺序"
+      },
+      {
+        "type": "code",
+        "text": "static int test() {\n    try {\n        return 1;\n    } finally {\n        System.out.println(\"finally 先执行\");\n    }\n}\n// 输出：finally 先执行，返回 1"
+      },
+      {
+        "type": "p",
+        "text": "try 里的 return 求值后会被暂存，然后执行 finally，最后才真正返回。"
+      },
+      {
+        "type": "h2",
+        "text": "四、finally 里的 return 会覆盖 try 的返回值"
+      },
+      {
+        "type": "code",
+        "text": "static int test() {\n    try {\n        return 1;\n    } finally {\n        return 2;\n    }\n}\n// 返回 2！try 的返回值被丢弃"
+      },
+      {
+        "type": "p",
+        "text": "这是明确的反模式：它会吞掉异常，也会让调用方拿到意外的结果。工具会给出警告，不要这么写。"
+      },
+      {
+        "type": "h2",
+        "text": "五、受检异常和运行时异常"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "受检异常（Exception 的子类，除 RuntimeException）：必须 catch 或 throws 声明，编译器强制检查",
+          "运行时异常（RuntimeException 及其子类）：不强制处理，通常是程序逻辑问题"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "实际开发中的经验法则："
+      },
+      {
+        "type": "ul",
+        "items": [
+          "能恢复的用受检异常，让调用方必须面对",
+          "程序 bug（空指针、数组越界）用运行时异常，不要到处 catch",
+          "不要 catch (Exception e) {} 空吞异常，至少打日志",
+          "不要用异常做流程控制，性能开销大且难读"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "六、try-with-resources"
+      },
+      {
+        "type": "code",
+        "text": "// 推荐写法：自动关闭，且比手写 finally 更安全\ntry (BufferedReader br = new BufferedReader(new FileReader(\"a.txt\"))) {\n    return br.readLine();\n}"
+      },
+      {
+        "type": "p",
+        "text": "try-with-resources 会自动调用 close()，并且即使 close 抛异常也不会吞掉主逻辑的异常（被抑制的异常挂在主异常上）。"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "title": "MySQL 事务与 ACID：从转账场景理解",
+    "summary": "为什么转账必须用事务？脏读、不可重复读、幻读分别是什么？隔离级别怎么选？",
+    "category": "数据库",
+    "tags": [
+      "MySQL",
+      "事务",
+      "ACID"
+    ],
+    "date": "2026-04-12",
+    "readingTime": 13,
+    "cover": "linear-gradient(135deg, #059669, #047857)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "事务这个概念，用一个转账场景就能讲明白。"
+      },
+      {
+        "type": "h2",
+        "text": "一、转账为什么必须用事务"
+      },
+      {
+        "type": "code",
+        "text": "START TRANSACTION;\nUPDATE account SET balance = balance - 100 WHERE id = 1;   -- A 扣 100\nUPDATE account SET balance = balance + 100 WHERE id = 2;   -- B 加 100\nCOMMIT;"
+      },
+      {
+        "type": "p",
+        "text": "如果第一条执行成功后程序崩了，A 少了 100 但 B 没加——钱凭空消失。事务保证这两条要么都成功，要么都不生效。"
+      },
+      {
+        "type": "h2",
+        "text": "二、ACID 四个特性"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "原子性（Atomicity）：事务内操作不可分割，要么全成功要么全回滚",
+          "一致性（Consistency）：事务前后数据都满足业务约束，比如总金额不变",
+          "隔离性（Isolation）：并发事务之间互不干扰",
+          "持久性（Durability）：提交后的修改永久生效，即使数据库崩溃也不丢"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "原子性、持久性靠 redo log 和 undo log 保证；隔离性靠锁和 MVCC 保证。"
+      },
+      {
+        "type": "h2",
+        "text": "三、并发会带来什么问题"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "脏读：读到了别的事务还没提交的数据，对方一回滚，你读到的就是错的",
+          "不可重复读：同一个事务内两次读同一行，结果不一样（别人中途改了）",
+          "幻读：同一个事务内两次按条件查，第二次多出了新插入的行"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "四、四种隔离级别"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "READ UNCOMMITTED：什么都不防，能脏读，基本不用",
+          "READ COMMITTED：防脏读，Oracle 默认，但会不可重复读",
+          "REPEATABLE READ：防脏读和不可重复读，MySQL 默认，InnoDB 用 MVCC + 间隙锁基本也防住了幻读",
+          "SERIALIZABLE：全串行，最安全但并发性能最差"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "-- 查看当前隔离级别\nSELECT @@transaction_isolation;\n\n-- 修改会话隔离级别\nSET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;"
+      },
+      {
+        "type": "h2",
+        "text": "五、实际怎么选"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "绝大多数业务用 MySQL 默认的 REPEATABLE READ 就够了",
+          "并发压力大的互联网业务常改成 READ COMMITTED，减少间隙锁带来的死锁",
+          "只有对账、库存扣减等强一致场景才考虑 SERIALIZABLE 或显式加锁"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "-- 悲观锁：直接锁住这一行，等别人释放\nSELECT * FROM account WHERE id = 1 FOR UPDATE;"
+      },
+      {
+        "type": "p",
+        "text": "乐观锁更适合读多写少的场景：加一个 version 字段，更新时判断版本号是否变过。"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "SQL 多表查询：INNER JOIN 和 LEFT JOIN 的区别",
+    "summary": "用两张表的数据把各种 JOIN 讲清楚，顺带说明为什么把条件写在 WHERE 还是 ON 会得到完全不同的结果。",
+    "category": "数据库",
+    "tags": [
+      "SQL",
+      "MySQL",
+      "JOIN"
+    ],
+    "date": "2026-03-28",
+    "readingTime": 11,
+    "cover": "linear-gradient(135deg, #7c3aed, #6d28d9)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "JOIN 的语法不难，但「条件写在 ON 还是 WHERE」这个细节，能让结果完全不同。"
+      },
+      {
+        "type": "h2",
+        "text": "一、准备两张表"
+      },
+      {
+        "type": "code",
+        "text": "-- student 表\nid | name\n1  | 张三\n2  | 李四\n3  | 王五\n\n-- score 表\nid | student_id | subject\n1  | 1          | 数学\n2  | 1          | 语文"
+      },
+      {
+        "type": "h2",
+        "text": "二、INNER JOIN：只保留两边都匹配上的"
+      },
+      {
+        "type": "code",
+        "text": "SELECT s.name, c.subject\nFROM student s\nINNER JOIN score c ON s.id = c.student_id;"
+      },
+      {
+        "type": "p",
+        "text": "结果只有张三的两行。王五没有成绩，李四也没有，都被过滤掉了。"
+      },
+      {
+        "type": "h2",
+        "text": "三、LEFT JOIN：保留左表所有行"
+      },
+      {
+        "type": "code",
+        "text": "SELECT s.name, c.subject\nFROM student s\nLEFT JOIN score c ON s.id = c.student_id;"
+      },
+      {
+        "type": "p",
+        "text": "结果是张三两行，加上李四和王五各一行（subject 为 NULL）。左表的行一条都不会丢。"
+      },
+      {
+        "type": "h2",
+        "text": "四、关键陷阱：ON 和 WHERE 的区别"
+      },
+      {
+        "type": "p",
+        "text": "LEFT JOIN 时，把右表的过滤条件写在 ON 还是 WHERE，结果完全不同："
+      },
+      {
+        "type": "code",
+        "text": "-- 写法 A：条件在 ON，仍保留左表所有行\nSELECT s.name, c.subject\nFROM student s\nLEFT JOIN score c ON s.id = c.student_id AND c.subject = '数学';\n-- 结果：张三(数学)、李四(NULL)、王五(NULL)\n\n-- 写法 B：条件在 WHERE，LEFT JOIN 退化成 INNER JOIN\nSELECT s.name, c.subject\nFROM student s\nLEFT JOIN score c ON s.id = c.student_id\nWHERE c.subject = '数学';\n-- 结果：只剩张三(数学)"
+      },
+      {
+        "type": "p",
+        "text": "原因：ON 是在「匹配时」加条件，不匹配的右表行置 NULL，但左表行仍保留；WHERE 是在 JOIN 之后过滤，把 subject 为 NULL 的行全滤掉了。"
+      },
+      {
+        "type": "h2",
+        "text": "五、其他几种 JOIN"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "RIGHT JOIN：保留右表所有行，实际用得少，通常把表顺序调换用 LEFT JOIN 更易读",
+          "FULL OUTER JOIN：两边都保留，MySQL 不直接支持，需要 LEFT JOIN UNION RIGHT JOIN",
+          "CROSS JOIN：笛卡尔积，两表行数相乘，慎用"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "六、性能提示"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "JOIN 的关联字段一定要建索引，否则每行都要全表扫一遍右表",
+          "小表驱动大表：让数据量小的表作为驱动表，减少外层循环次数",
+          "用 EXPLAIN 看执行计划，关注 type 是不是 ALL"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "-- 关联字段建索引\nCREATE INDEX idx_score_student_id ON score(student_id);"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "HTTP 基础：在地址栏敲下回车后发生了什么",
+    "summary": "DNS 解析、TCP 三次握手、请求报文、响应状态码、浏览器渲染——把一次访问拆开看。",
+    "category": "计算机网络",
+    "tags": [
+      "HTTP",
+      "网络",
+      "浏览器"
+    ],
+    "date": "2026-03-15",
+    "readingTime": 14,
+    "cover": "linear-gradient(135deg, #0ea5e9, #0284c7)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "这是一道经典面试题。不用回答到每一个字节，但主干流程要能说清楚。"
+      },
+      {
+        "type": "h2",
+        "text": "一、整体流程"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "1. 浏览器解析 URL，确定协议、域名、路径",
+          "2. DNS 解析：域名 → IP 地址（本地缓存 → 系统缓存 → 递归查询）",
+          "3. 建立 TCP 连接：三次握手",
+          "4. 如果是 HTTPS，还要做 TLS 握手协商密钥",
+          "5. 发送 HTTP 请求报文",
+          "6. 服务器处理并返回响应报文",
+          "7. 浏览器解析 HTML、构建 DOM、下载子资源、渲染页面",
+          "8. 四次挥手断开连接（HTTP/1.1 默认 keep-alive，可能复用连接）"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "二、TCP 三次握手为什么是三次"
+      },
+      {
+        "type": "p",
+        "text": "核心目的是双方都确认「自己的发送和接收能力都正常」，同时同步初始序列号。"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "第一次：客户端发 SYN，服务端知道「客户端能发」",
+          "第二次：服务端回 SYN+ACK，客户端知道「服务端能收也能发」",
+          "第三次：客户端回 ACK，服务端才知道「客户端能收」"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "两次握手的话，服务端无法确认客户端收到了自己的 SYN，可能为一个已经失效的连接分配资源。"
+      },
+      {
+        "type": "h2",
+        "text": "三、请求报文长什么样"
+      },
+      {
+        "type": "code",
+        "text": "GET /articles?tag=Java HTTP/1.1\nHost: example.com\nUser-Agent: Mozilla/5.0\nAccept: text/html\nCookie: sessionId=abc123\n\n（GET 请求一般没有请求体）"
+      },
+      {
+        "type": "p",
+        "text": "常见的请求方法：GET 查、POST 增、PUT 改、DELETE 删。实际项目里很多团队用 POST 承担大部分写操作，但语义上应当区分。"
+      },
+      {
+        "type": "h2",
+        "text": "四、常见状态码"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "200 OK：成功",
+          "301 / 302：永久 / 临时重定向",
+          "304 Not Modified：协商缓存命中，用本地副本",
+          "400 Bad Request：请求参数有问题",
+          "401 Unauthorized：没登录或 token 无效",
+          "403 Forbidden：登录了但没权限",
+          "404 Not Found：资源不存在",
+          "500 Internal Server Error：服务端代码抛异常",
+          "502 / 504：网关错误 / 网关超时，通常是后端挂了或太慢"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "401 和 403 的区别经常被问：401 是「你是谁我不知道」，403 是「我知道你是谁，但你不能访问」。"
+      },
+      {
+        "type": "h2",
+        "text": "五、缓存是怎么生效的"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "强缓存：Cache-Control / Expires，命中后不发请求，直接用本地副本",
+          "协商缓存：ETag / Last-Modified，发请求问服务端「变了没」，没变返回 304"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "Cache-Control: max-age=31536000, immutable   # 带 hash 的静态资源\nCache-Control: no-cache                        # 每次都校验"
+      },
+      {
+        "type": "p",
+        "text": "前端工程里的常见做法：HTML 不缓存（或短缓存），带 hash 的 JS/CSS 长缓存，这样发版后用户能立刻拿到新版本。"
+      },
+      {
+        "type": "h2",
+        "text": "六、HTTP/2 和 HTTP/3 带来了什么"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "HTTP/2：多路复用（一个连接并发多请求）、头部压缩、服务端推送",
+          "HTTP/3：基于 QUIC（UDP），进一步减少握手延迟，弱网下表现更好"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Vue 组件通信：props、emit 与 provide/inject",
+    "summary": "父子、兄弟、跨层级组件之间怎么传数据？把几种方案和各自的适用场景理清楚。",
+    "category": "前端开发",
+    "tags": [
+      "Vue",
+      "组件",
+      "通信"
+    ],
+    "date": "2026-03-01",
+    "readingTime": 12,
+    "cover": "linear-gradient(135deg, #22c55e, #16a34a)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "Vue 的组件通信方案有好几种，选错会让代码变得难以维护。核心判断依据是「两个组件是什么关系」。"
+      },
+      {
+        "type": "h2",
+        "text": "一、父传子：props"
+      },
+      {
+        "type": "code",
+        "text": "<!-- 父组件 -->\n<ArticleCard :article=\"item\" :show-tags=\"true\" />\n\n<!-- 子组件 ArticleCard.vue -->\n<script setup>\nconst props = defineProps({\n  article: { type: Object, required: true },\n  showTags: { type: Boolean, default: false }\n})\n</script>"
+      },
+      {
+        "type": "p",
+        "text": "props 是单向数据流：子组件不应该直接修改 props。需要改的话，让子组件 emit 事件，由父组件改。"
+      },
+      {
+        "type": "h2",
+        "text": "二、子传父：emit"
+      },
+      {
+        "type": "code",
+        "text": "<!-- 子组件 Pagination.vue -->\n<script setup>\nconst emit = defineEmits(['change'])\n\nfunction go(target) {\n  emit('change', target)      // 把新页码抛给父组件\n}\n</script>\n\n<!-- 父组件 -->\n<Pagination :page=\"page\" :total-pages=\"totalPages\" @change=\"(p) => (page = p)\" />"
+      },
+      {
+        "type": "p",
+        "text": "这样做的好处是数据来源唯一：页码只由父组件持有，子组件只是「通知」，不用关心谁来处理。"
+      },
+      {
+        "type": "h2",
+        "text": "三、v-model：双向绑定的语法糖"
+      },
+      {
+        "type": "code",
+        "text": "<!-- 子组件 TagFilter.vue -->\n<script setup>\nconst props = defineProps({ modelValue: { type: String, default: '' } })\nconst emit = defineEmits(['update:modelValue'])\n</script>\n\n<!-- 父组件 -->\n<TagFilter v-model=\"activeTag\" :tags=\"tags\" />"
+      },
+      {
+        "type": "p",
+        "text": "v-model 展开就是 :modelValue + @update:modelValue，本质还是 props 加 emit，只是写法更短。"
+      },
+      {
+        "type": "h2",
+        "text": "四、跨层级：provide / inject"
+      },
+      {
+        "type": "code",
+        "text": "<!-- 祖先组件 -->\n<script setup>\nimport { provide, ref } from 'vue'\nconst theme = ref('light')\nprovide('theme', theme)\n</script>\n\n<!-- 任意深度的后代组件 -->\n<script setup>\nimport { inject } from 'vue'\nconst theme = inject('theme')\n</script>"
+      },
+      {
+        "type": "p",
+        "text": "适合「主题、语言、当前用户」这类全局但不需要响应式集中管理的值。缺点是依赖关系不直观——看子组件代码不知道数据从哪来，调试时不好追。"
+      },
+      {
+        "type": "h2",
+        "text": "五、兄弟组件之间"
+      },
+      {
+        "type": "p",
+        "text": "兄弟组件没有直接通道，标准做法是「状态提升到共同父组件」："
+      },
+      {
+        "type": "ul",
+        "items": [
+          "A 组件 emit 事件 → 父组件接收 → 父组件通过 props 传给 B 组件",
+          "数据流永远是单向的，容易追踪"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "如果层级很深、需要共享的状态很多，再考虑 Pinia（Vue 官方推荐的状态管理库）。但不要一上来就引入——两个组件传个值还用不上状态管理。"
+      },
+      {
+        "type": "h2",
+        "text": "六、怎么选"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "父子直接传：props / emit，覆盖绝大多数场景",
+          "表单类双向绑定：v-model",
+          "跨多层且值不常变：provide / inject",
+          "多个不相关组件共享状态：Pinia"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "判断标准很简单：如果两个组件之间要传三层以上，先怀疑是不是组件拆分得不合理。"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "Vue Router 实战：路由守卫与登录拦截",
+    "summary": "从路由表到导航守卫，实现「未登录访问后台自动跳转登录页」这个最常见的需求。",
+    "category": "前端开发",
+    "tags": [
+      "Vue",
+      "Vue Router",
+      "权限"
+    ],
+    "date": "2026-02-18",
+    "readingTime": 12,
+    "cover": "linear-gradient(135deg, #14b8a6, #0d9488)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "单页应用没有服务端跳转，所有页面切换都由前端路由控制。因此「哪些页面需要登录」这件事，也必须在前端拦住。"
+      },
+      {
+        "type": "h2",
+        "text": "一、路由表与懒加载"
+      },
+      {
+        "type": "code",
+        "text": "const routes = [\n  { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },\n  { path: '/articles', name: 'articles', component: () => import('@/views/ListView.vue') },\n  { path: '/article/:id', name: 'detail', component: () => import('@/views/DetailView.vue'), props: true },\n  { path: '/admin', name: 'admin', component: () => import('@/views/AdminView.vue'), meta: { requiresAuth: true } },\n  { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/NotFoundView.vue') }\n]"
+      },
+      {
+        "type": "p",
+        "text": "() => import(...) 是路由懒加载：只有访问这个路由时才下载对应的 JS，首屏体积更小。"
+      },
+      {
+        "type": "h2",
+        "text": "二、全局前置守卫"
+      },
+      {
+        "type": "code",
+        "text": "router.beforeEach((to, from, next) => {\n  const token = localStorage.getItem('token')\n\n  if (to.meta.requiresAuth && !token) {\n    next({ name: 'login', query: { redirect: to.fullPath } })   // 记住原本要去哪\n  } else {\n    next()\n  }\n})"
+      },
+      {
+        "type": "p",
+        "text": "query 里带上 redirect，登录成功后就能跳回用户原本想访问的页面，体验会好很多。"
+      },
+      {
+        "type": "h2",
+        "text": "三、动态标题"
+      },
+      {
+        "type": "code",
+        "text": "router.afterEach((to) => {\n  const base = '陈泓任的技术博客'\n  document.title = to.meta?.title ? to.params.title + ' | ' + base : base\n})"
+      },
+      {
+        "type": "h2",
+        "text": "四、滚动行为"
+      },
+      {
+        "type": "code",
+        "text": "const router = createRouter({\n  history: createWebHistory(import.meta.env.BASE_URL),\n  routes,\n  scrollBehavior(to, from, savedPosition) {\n    if (savedPosition) return savedPosition   // 浏览器前进后退时恢复位置\n    return { top: 0 }                         // 其余情况回到顶部\n  }\n})"
+      },
+      {
+        "type": "h2",
+        "text": "五、部署到子路径时的大坑"
+      },
+      {
+        "type": "p",
+        "text": "createWebHistory() 不传参数时，base 默认是 /。如果站点部署在子路径（比如 GitHub Pages 的 /my-blog/），路由匹配会全部错位——首页会直接渲染成 404 页。"
+      },
+      {
+        "type": "code",
+        "text": "// 正确写法：让路由 base 跟随 Vite 的 base\nhistory: createWebHistory(import.meta.env.BASE_URL)"
+      },
+      {
+        "type": "p",
+        "text": "同时 vite.config.js 里要设 base，并且 axios 的 baseURL 也要用同一个值。这三处必须一致，任何一处漏掉都会导致线上白屏或接口 404——而这些问题在本地根路径开发时完全不会暴露。"
+      },
+      {
+        "type": "h2",
+        "text": "六、几个实用技巧"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "路由 props: true，把 params 直接作为 props 传进组件，组件不用依赖 $route",
+          "用 meta 挂权限、标题、是否需要缓存等标记，比在组件里写死更集中",
+          "守卫里避免写复杂逻辑，只做「能不能进」的判断，数据处理放到组件里"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "// props: true 的用法\nconst props = defineProps({ id: { type: [String, Number], required: true } })\n\n// 组件被复用时（同一路由换参数）需要监听 id 变化\nwatch(() => props.id, (next) => load(next), { immediate: true })"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "CSS 定位详解：relative / absolute / fixed / sticky",
+    "summary": "四个 position 值分别相对谁定位？什么时候用哪个？把最容易搞混的几个点讲清楚。",
+    "category": "前端开发",
+    "tags": [
+      "CSS",
+      "布局"
+    ],
+    "date": "2026-02-04",
+    "readingTime": 11,
+    "cover": "linear-gradient(135deg, #f43f5e, #e11d48)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "position 是 CSS 里最容易用错、也最容易互相影响的一个属性。"
+      },
+      {
+        "type": "h2",
+        "text": "一、static：默认值"
+      },
+      {
+        "type": "p",
+        "text": "正常的文档流排列，top / left / z-index 都不生效。不设置 position 时就是它。"
+      },
+      {
+        "type": "h2",
+        "text": "二、relative：相对自己原来的位置偏移"
+      },
+      {
+        "type": "code",
+        "text": ".box {\n  position: relative;\n  top: 10px;    /* 比原位置往下 10px */\n  left: 20px;\n}"
+      },
+      {
+        "type": "p",
+        "text": "关键点：元素原来的空间仍然被占着，后面的元素不会补上来。所以它常被用来「微调位置」，或者作为绝对定位子元素的参照物。"
+      },
+      {
+        "type": "h2",
+        "text": "三、absolute：相对最近的定位祖先"
+      },
+      {
+        "type": "code",
+        "text": ".card { position: relative; }          /* 给父元素加定位 */\n.card__badge {\n  position: absolute;\n  top: 8px;\n  right: 8px;\n}"
+      },
+      {
+        "type": "p",
+        "text": "absolute 会向上寻找最近的、position 不是 static 的祖先元素作为参照。如果一个都没有，就相对初始包含块（可以理解为页面）。"
+      },
+      {
+        "type": "p",
+        "text": "常见坑：父元素忘了加 position: relative，结果徽标跑到了页面角落。"
+      },
+      {
+        "type": "p",
+        "text": "另外 absolute 会让元素脱离文档流，父元素会「塌陷」——如果父元素高度靠子元素撑开，就会变成 0。"
+      },
+      {
+        "type": "h2",
+        "text": "四、fixed：相对视口固定"
+      },
+      {
+        "type": "code",
+        "text": ".navbar {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}"
+      },
+      {
+        "type": "p",
+        "text": "滚动页面时位置不变，适合顶部导航、返回顶部按钮、悬浮客服。注意它脱离文档流，下面的内容会被盖住，通常要给 body 或内容区加 padding-top。"
+      },
+      {
+        "type": "h2",
+        "text": "五、sticky：滚到阈值后粘住"
+      },
+      {
+        "type": "code",
+        "text": ".navbar {\n  position: sticky;\n  top: 0;\n  z-index: 100;\n}"
+      },
+      {
+        "type": "p",
+        "text": "sticky 是「正常滚动 + 到达阈值后固定」，介于 relative 和 fixed 之间，很适合做吸顶导航。"
+      },
+      {
+        "type": "p",
+        "text": "两个最常见的失效原因："
+      },
+      {
+        "type": "ul",
+        "items": [
+          "没写 top / bottom 等阈值，等于没生效",
+          "某个祖先元素设置了 overflow: hidden / auto / scroll，sticky 会被限制在那个容器里"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "六、怎么选"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "只是微调位置：relative",
+          "在父容器内定位角标、遮罩、下拉菜单：父 relative + 子 absolute",
+          "相对视口固定（导航、悬浮按钮）：fixed",
+          "吸顶效果：sticky",
+          "纯布局排列优先用 Flex / Grid，不要用定位硬凑"
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "七、层叠顺序"
+      },
+      {
+        "type": "p",
+        "text": "只有定位元素（position 不是 static）的 z-index 才生效。而且 z-index 只在自己所在的层叠上下文里比较——父元素建立了新的层叠上下文时，子元素再大的 z-index 也盖不过父元素同级的其他元素。"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "title": "JavaScript 异步：从回调到 Promise 再到 async/await",
+    "summary": "回调地狱是怎么来的？Promise 解决了什么？async/await 又省掉了什么？一条线理清 JS 异步演进。",
+    "category": "前端开发",
+    "tags": [
+      "JavaScript",
+      "异步",
+      "Promise"
+    ],
+    "date": "2026-01-20",
+    "readingTime": 13,
+    "cover": "linear-gradient(135deg, #eab308, #ca8a04)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "JavaScript 是单线程的，但网络请求、定时器这些操作不能阻塞主线程，于是就有了异步。理解异步的演进，能帮你看懂很多老代码和新写法。"
+      },
+      {
+        "type": "h2",
+        "text": "一、回调函数：最早的方案"
+      },
+      {
+        "type": "code",
+        "text": "getUser(userId, function(user) {\n  getOrders(user.id, function(orders) {\n    getOrderDetail(orders[0].id, function(detail) {\n      render(detail, function() {\n        console.log('终于渲染完了')\n      })\n    })\n  })\n})"
+      },
+      {
+        "type": "p",
+        "text": "这就是「回调地狱」：层层嵌套，错误处理要靠每个回调自己判断，代码既难读也难维护。"
+      },
+      {
+        "type": "h2",
+        "text": "二、Promise：把嵌套变成链式"
+      },
+      {
+        "type": "code",
+        "text": "getUser(userId)\n  .then(user => getOrders(user.id))\n  .then(orders => getOrderDetail(orders[0].id))\n  .then(detail => render(detail))\n  .catch(err => console.error('任何一步出错都会到这里', err))\n  .finally(() => hideLoading())"
+      },
+      {
+        "type": "p",
+        "text": "Promise 有三个状态：pending → fulfilled 或 rejected，状态一旦改变就不可逆。相比回调，它解决了两个核心问题：链式调用消除嵌套，以及统一的错误捕获。"
+      },
+      {
+        "type": "h2",
+        "text": "三、async/await：让异步看起来像同步"
+      },
+      {
+        "type": "code",
+        "text": "async function loadDetail(userId) {\n  try {\n    const user = await getUser(userId)\n    const orders = await getOrders(user.id)\n    const detail = await getOrderDetail(orders[0].id)\n    return render(detail)\n  } catch (err) {\n    console.error('出错', err)\n  } finally {\n    hideLoading()\n  }\n}"
+      },
+      {
+        "type": "p",
+        "text": "async 函数一定返回 Promise；await 会等待 Promise 完成并取出结果。try/catch 能像处理同步异常一样处理异步错误，可读性最好。"
+      },
+      {
+        "type": "h2",
+        "text": "四、并发：别把能并行的写成串行"
+      },
+      {
+        "type": "code",
+        "text": "// 慢：两个请求依次等，总耗时 ≈ 两个之和\nconst a = await fetchA()\nconst b = await fetchB()\n\n// 快：同时发出，总耗时 ≈ 较慢的那个\nconst [a, b] = await Promise.all([fetchA(), fetchB()])"
+      },
+      {
+        "type": "p",
+        "text": "只要两个请求互不依赖，就应该用 Promise.all 并发。这是最容易拿到性能收益的一处改动。"
+      },
+      {
+        "type": "p",
+        "text": "注意 Promise.all 是「一个失败全部失败」。如果希望忽略失败的请求继续走，用 Promise.allSettled："
+      },
+      {
+        "type": "code",
+        "text": "const results = await Promise.allSettled([fetchA(), fetchB()])\nresults.forEach(r => {\n  if (r.status === 'fulfilled') console.log(r.value)\n  else console.warn('失败：', r.reason)\n})"
+      },
+      {
+        "type": "h2",
+        "text": "五、容易踩的坑"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "for 循环里用 await 会串行执行，需要并发时先 map 出 Promise 数组再 Promise.all",
+          "忘了 await，拿到的是 Promise 对象而不是结果",
+          "async 函数里抛出的异常如果没被 await，会变成未处理的 Promise rejection",
+          "await 只能用在 async 函数里（或者支持顶层 await 的模块中）"
+        ]
+      },
+      {
+        "type": "code",
+        "text": "// 串行：总耗时 = 累加\nfor (const id of ids) { await load(id) }\n\n// 并发：总耗时 = 最慢的那个\nawait Promise.all(ids.map(id => load(id)))"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Spring Boot 入门：写出第一个 REST 接口",
+    "summary": "从 pom 依赖到 Controller，十分钟跑起来一个能返回 JSON 的后端接口。",
+    "category": "Java 后端",
+    "tags": [
+      "Spring Boot",
+      "Java",
+      "REST"
+    ],
+    "date": "2026-01-06",
+    "readingTime": 13,
+    "cover": "linear-gradient(135deg, #16a34a, #15803d)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "Spring Boot 最大的价值是「约定优于配置」：不用写一堆 XML，加个依赖、写个注解，服务就能跑起来。"
+      },
+      {
+        "type": "h2",
+        "text": "一、加依赖"
+      },
+      {
+        "type": "code",
+        "text": "<dependency>\n  <groupId>org.springframework.boot</groupId>\n  <artifactId>spring-boot-starter-web</artifactId>\n</dependency>"
+      },
+      {
+        "type": "p",
+        "text": "这一个 starter 就带进了 Spring MVC、Jackson（JSON 序列化）、内嵌 Tomcat。"
+      },
+      {
+        "type": "h2",
+        "text": "二、启动类"
+      },
+      {
+        "type": "code",
+        "text": "@SpringBootApplication\npublic class BlogApplication {\n    public static void main(String[] args) {\n        SpringApplication.run(BlogApplication.class, args);\n    }\n}"
+      },
+      {
+        "type": "p",
+        "text": "@SpringBootApplication 是三个注解的组合：@Configuration + @EnableAutoConfiguration + @ComponentScan。它会扫描当前包及子包下的组件。"
+      },
+      {
+        "type": "h2",
+        "text": "三、第一个接口"
+      },
+      {
+        "type": "code",
+        "text": "@RestController\n@RequestMapping(\"/api/articles\")\npublic class ArticleController {\n\n    @GetMapping\n    public List<Article> list() {\n        return List.of(\n            new Article(1L, \"Java 面向对象\", \"Java\"),\n            new Article(2L, \"MySQL 索引\", \"数据库\")\n        );\n    }\n\n    @GetMapping(\"/{id}\")\n    public Article detail(@PathVariable Long id) {\n        return new Article(id, \"第 \" + id + \" 篇文章\", \"Java\");\n    }\n}"
+      },
+      {
+        "type": "p",
+        "text": "@RestController = @Controller + @ResponseBody，返回值会被自动转成 JSON。"
+      },
+      {
+        "type": "h2",
+        "text": "四、接收参数"
+      },
+      {
+        "type": "code",
+        "text": "// 查询参数 /api/articles?tag=Java&page=1\n@GetMapping\npublic List<Article> list(@RequestParam(required = false) String tag,\n                          @RequestParam(defaultValue = \"1\") int page) { ... }\n\n// 路径参数 /api/articles/1\n@GetMapping(\"/{id}\")\npublic Article detail(@PathVariable Long id) { ... }\n\n// 请求体（JSON）\n@PostMapping\npublic Article create(@RequestBody Article article) { ... }"
+      },
+      {
+        "type": "h2",
+        "text": "五、统一返回结构"
+      },
+      {
+        "type": "code",
+        "text": "public class Result<T> {\n    private int code;\n    private String message;\n    private T data;\n    // 构造方法 + getter 省略\n}\n\n@GetMapping(\"/{id}\")\npublic Result<Article> detail(@PathVariable Long id) {\n    return Result.success(service.findById(id));\n}"
+      },
+      {
+        "type": "p",
+        "text": "实际项目里几乎都会包一层统一结构，前端拦截器就能用同一套逻辑处理成功和失败。"
+      },
+      {
+        "type": "h2",
+        "text": "六、三层结构的分工"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "Controller：只负责接参数、调 Service、返回结果，不写业务逻辑",
+          "Service：业务逻辑、事务控制（@Transactional 加在这一层）",
+          "Mapper / Repository：只负责数据库访问"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "这么分的原因是每层的变更频率不同：业务规则会频繁调整，数据库访问相对稳定。混在一起会让改动风险成倍增加。"
+      },
+      {
+        "type": "h2",
+        "text": "七、用 Postman 或 curl 验证"
+      },
+      {
+        "type": "code",
+        "text": "curl http://localhost:8080/api/articles\ncurl \"http://localhost:8080/api/articles?tag=Java\"\ncurl http://localhost:8080/api/articles/1"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "title": "前端项目部署：从本地到 GitHub Pages 踩过的坑",
+    "summary": "Actions 工作流、子路径 base、SPA 路由回退——把这次部署遇到的两个真 bug 完整记录下来。",
+    "category": "开发工具",
+    "tags": [
+      "部署",
+      "GitHub Actions",
+      "CI/CD"
+    ],
+    "date": "2025-12-20",
+    "readingTime": 12,
+    "cover": "linear-gradient(135deg, #475569, #1e293b)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "项目在本地跑得好好的，一部署就白屏或 404，是前端新人最常遇到的挫败。这篇记录我这次部署的完整过程和踩到的坑。"
+      },
+      {
+        "type": "h2",
+        "text": "一、先做正确的构建"
+      },
+      {
+        "type": "code",
+        "text": "pnpm install\npnpm build     # 产物在 dist/ 目录"
+      },
+      {
+        "type": "p",
+        "text": "部署的本质就是把 dist/ 这个静态目录放到服务器上。这一步先确保本地构建成功——构建失败就不要往下走了。"
+      },
+      {
+        "type": "h2",
+        "text": "二、用 GitHub Actions 自动部署"
+      },
+      {
+        "type": "code",
+        "text": "name: Deploy to GitHub Pages\non:\n  push:\n    branches: [main]\npermissions:\n  contents: read\n  pages: write\n  id-token: write\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: pnpm/action-setup@v4\n        with: { version: 11 }\n      - uses: actions/setup-node@v4\n        with: { node-version: 24, cache: pnpm }\n      - run: pnpm install --frozen-lockfile\n      - run: pnpm build\n        env:\n          VITE_BASE_PATH: /my-blog/\n      - run: cp dist/index.html dist/404.html\n      - uses: actions/upload-pages-artifact@v3\n        with: { path: dist }"
+      },
+      {
+        "type": "p",
+        "text": "配好之后，每次 push 到 main 就自动构建发布，不用手动上传文件。"
+      },
+      {
+        "type": "h2",
+        "text": "三、坑一：路由 base 和构建 base 不一致"
+      },
+      {
+        "type": "p",
+        "text": "我的博客部署在 https://zpzb14.github.io/my-blog/ 这个子路径下，结果首页渲染成了 404 页。"
+      },
+      {
+        "type": "p",
+        "text": "原因：Vite 的 base 设成了 /my-blog/（资源路径正确了），但 Vue Router 用 createWebHistory() 没传参数，base 默认是 /。于是路由把 /my-blog/ 当成了一个不存在的路径，直接命中了 404 兜底路由。"
+      },
+      {
+        "type": "code",
+        "text": "// 修复前\nhistory: createWebHistory()\n\n// 修复后：跟随 Vite 的 base\nhistory: createWebHistory(import.meta.env.BASE_URL)"
+      },
+      {
+        "type": "h2",
+        "text": "四、坑二：axios 的 baseURL 也要跟随"
+      },
+      {
+        "type": "p",
+        "text": "修完路由，列表和详情页还是没数据。打开 Network 一看，请求打到了 /data/articles.json，而正确的地址应该是 /my-blog/data/articles.json。"
+      },
+      {
+        "type": "code",
+        "text": "// 修复前：写死了根路径\nbaseURL: import.meta.env.VITE_API_BASE || '/',\n\n// 修复后\nbaseURL: import.meta.env.VITE_API_BASE || import.meta.env.BASE_URL,"
+      },
+      {
+        "type": "h2",
+        "text": "五、坑三：SPA 路由刷新 404"
+      },
+      {
+        "type": "p",
+        "text": "GitHub Pages 是纯静态托管，没有「任何路径都返回 index.html」的规则。直接访问或刷新 /articles 会返回 404。"
+      },
+      {
+        "type": "p",
+        "text": "解决办法是把 index.html 复制一份成 404.html。GitHub Pages 在找不到文件时会返回 404.html，而它的内容就是我们的 SPA 外壳，Vue 启动后照样能接管路由。"
+      },
+      {
+        "type": "code",
+        "text": "# 工作流里加一步\n- run: cp dist/index.html dist/404.html"
+      },
+      {
+        "type": "h2",
+        "text": "六、总结：三处 base 必须一致"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "vite.config.js 的 base（静态资源路径）",
+          "Vue Router 的 base（路由匹配）",
+          "axios 的 baseURL（接口请求路径）"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "这三处只要有一处漏掉前缀，线上就会出现白屏或 404，而本地在根路径开发时完全不会暴露。把 base 统一收敛到 import.meta.env.BASE_URL，是最省心的做法。"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "title": "开发环境搭建：JDK + Maven + Node 一次配好",
+    "summary": "把 JDK、Maven、Node 装到非系统盘，配好国内镜像，并记录我踩过的 PATH 冲突问题。",
+    "category": "开发工具",
+    "tags": [
+      "环境搭建",
+      "JDK",
+      "Maven",
+      "Node"
+    ],
+    "date": "2025-12-06",
+    "readingTime": 13,
+    "cover": "linear-gradient(135deg, #9333ea, #7e22ce)",
+    "views": 0,
+    "content": [
+      {
+        "type": "p",
+        "text": "环境搭建本身没什么技术含量，但它能卡住你一整天。这篇记录一次完整配置过程，以及几个容易忽略的坑。"
+      },
+      {
+        "type": "h2",
+        "text": "一、为什么要装到非系统盘"
+      },
+      {
+        "type": "p",
+        "text": "主要是三个原因：C 盘空间容易被开发工具吃掉；重装系统时环境不用重新配；依赖缓存（Maven 仓库、pnpm store）动辄几百 MB，放在数据盘更安心。"
+      },
+      {
+        "type": "h2",
+        "text": "二、JDK"
+      },
+      {
+        "type": "p",
+        "text": "Spring Boot 3 要求 JDK 17 及以上，推荐直接用 LTS 版本（17 或 21）。解压版直接用，省去注册表写入。"
+      },
+      {
+        "type": "code",
+        "text": "setx JAVA_HOME \"F:\\Java\\jdk-21\"\n# 然后把 %JAVA_HOME%\\bin 加进 PATH"
+      },
+      {
+        "type": "h2",
+        "text": "三、Maven"
+      },
+      {
+        "type": "p",
+        "text": "解压后配置两个环境变量，再改 settings.xml 把仓库和镜像配好："
+      },
+      {
+        "type": "code",
+        "text": "<settings>\n  <localRepository>F:\\maven-repo</localRepository>\n  <mirrors>\n    <mirror>\n      <id>aliyun</id>\n      <url>https://maven.aliyun.com/repository/public</url>\n      <mirrorOf>central</mirrorOf>\n    </mirror>\n  </mirrors>\n</settings>"
+      },
+      {
+        "type": "p",
+        "text": "不配镜像的话，从国内拉依赖经常几 KB/s，一个 Spring Boot 项目要下十几分钟。配上阿里云镜像通常能到几 MB/s。"
+      },
+      {
+        "type": "h2",
+        "text": "四、Node 与 pnpm"
+      },
+      {
+        "type": "code",
+        "text": "# Node 官网下载 zip 解压到 F:\\nodejs\n# pnpm store 也指到数据盘，避免占用 C 盘\nnpm config set store-dir F:\\dev\\pnpm-store\nnpm install -g pnpm"
+      },
+      {
+        "type": "h2",
+        "text": "五、我踩过的坑：PATH 里有失效路径"
+      },
+      {
+        "type": "p",
+        "text": "配好之后 java -version 还是报错："
+      },
+      {
+        "type": "code",
+        "text": "Error: could not open 'F:\\Java1\\lib\\amd64\\jvm.cfg'"
+      },
+      {
+        "type": "p",
+        "text": "排查过程："
+      },
+      {
+        "type": "ul",
+        "items": [
+          "where java 看看到底调用了哪个 java.exe",
+          "发现 PATH 最前面有一个 Oracle 残留的 javapath 目录，里面是个老版本启动器",
+          "它会去读注册表里的 JavaHome，而注册表指向一个已经不存在的目录 F:\\Java1"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "解决办法是把那个失效的 PATH 条目删掉，并清理注册表里对应的残留键。"
+      },
+      {
+        "type": "p",
+        "text": "这个问题的教训是：Windows 上 PATH 是「系统变量在前、用户变量在后」按顺序查找的。只要前面有一个同名但坏掉的程序，后面的正确版本永远轮不到。"
+      },
+      {
+        "type": "h2",
+        "text": "六、验证清单"
+      },
+      {
+        "type": "code",
+        "text": "java -version     # 应输出 JDK 版本\njavac -version    # 应和 java 版本一致\nmvn -v            # 应输出 Maven 版本 + 使用的 JDK\nnode -v\npnpm -v\n\n# 最后跑一次真实构建，确认端到端可用\nmvn -B compile\npnpm build"
+      },
+      {
+        "type": "p",
+        "text": "特别注意 java 和 javac 版本必须一致。如果 PATH 里混了两个 JDK，会出现「用 A 编译、用 B 运行」的情况，程序可能报 UnsupportedClassVersionError。"
       }
     ]
   }
