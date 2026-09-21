@@ -81,3 +81,13 @@ node tests/smoke-test.cjs
 覆盖范围：首页渲染、列表分页、标签筛选（含 URL 同步）、关键词搜索、
 详情页代码块、404 兜底、关于页，以及 375 / 768 / 1440 三档宽度下的横向溢出检查。
 默认复用系统已安装的 Edge，不额外下载 Chromium。
+
+## 部署
+
+项目自带 `vercel.json`，配置了 SPA 路由重写——否则直接访问或刷新 `/articles`
+这类前端路由会返回 404。
+
+```bash
+pnpm build
+vercel --prod      # 或把仓库导入 Vercel 面板，自动识别 Vite
+```
