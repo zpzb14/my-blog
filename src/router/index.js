@@ -39,7 +39,10 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  // 必须传入 import.meta.env.BASE_URL：
+  // GitHub Pages 部署在 /my-blog/ 子路径下，Vercel 部署在根路径，
+  // Vite 会把 vite.config.js 里的 base 注入到 BASE_URL，这里自动适配。
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   // 切换路由时回到页面顶部
   scrollBehavior() {

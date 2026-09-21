@@ -91,3 +91,16 @@ node tests/smoke-test.cjs
 pnpm build
 vercel --prod      # 或把仓库导入 Vercel 面板，自动识别 Vite
 ```
+
+## 部署时的路径说明
+
+项目同时支持部署在**根路径**（Vercel）和**子路径**（GitHub Pages 的 `/my-blog/`）：
+
+| 位置 | 处理方式 |
+| --- | --- |
+| `vite.config.js` | `base` 取自 `VITE_BASE_PATH` 环境变量，默认 `/` |
+| `src/router/index.js` | `createWebHistory(import.meta.env.BASE_URL)`，路由自动带前缀 |
+| `src/api/index.js` | axios 的 `baseURL` 默认为 `import.meta.env.BASE_URL`，接口请求自动带前缀 |
+| `.github/workflows/deploy-pages.yml` | 构建时注入 `VITE_BASE_PATH=/my-blog/`，并把 `index.html` 复制为 `404.html` 做 SPA 回退 |
+
+> 这三处必须一致，任何一处漏掉前缀都会导致线上白屏或接口 404——本地在根路径开发时不会暴露这个问题。

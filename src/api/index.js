@@ -6,7 +6,9 @@ import axios from 'axios'
  * - 请求 / 响应拦截器集中处理鉴权头与错误提示
  */
 const request = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || '/',
+  // 默认跟随 Vite 的 base 路径：GitHub Pages 下是 /my-blog/，Vercel 下是 /
+  // 这样接口请求会自动带上正确的前缀，不需要每个调用点手写
+  baseURL: import.meta.env.VITE_API_BASE || import.meta.env.BASE_URL,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 })
