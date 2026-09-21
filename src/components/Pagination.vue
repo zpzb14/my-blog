@@ -81,7 +81,7 @@ function go(target) {
   padding: 0 12px;
   font-size: 14px;
   color: var(--color-text-muted);
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;

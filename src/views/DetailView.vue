@@ -108,7 +108,7 @@ watch(() => props.id, (next) => load(next), { immediate: true })
   margin-bottom: 22px;
   font-size: 14px;
   color: var(--color-text-muted);
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;
@@ -119,7 +119,7 @@ watch(() => props.id, (next) => load(next), { immediate: true })
 .post {
   max-width: 760px;
   padding: 36px 40px 40px;
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 }
@@ -151,8 +151,8 @@ watch(() => props.id, (next) => load(next), { immediate: true })
   overflow-x: auto;
   font-size: 13.5px;
   line-height: 1.7;
-  color: #e6edf3;
-  background: #1e2533;
+  color: var(--color-code-text);
+  background: var(--color-code-bg);
   border-radius: 10px;
 }
 

@@ -66,7 +66,7 @@ const timeline = [
 .block {
   margin-bottom: 38px;
   padding: 28px 32px;
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 }

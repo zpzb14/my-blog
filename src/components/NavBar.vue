@@ -52,7 +52,7 @@ watch(() => route.fullPath, () => { menuOpen.value = false })
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.88);
+  background: var(--color-nav-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
 }
@@ -114,7 +114,7 @@ watch(() => route.fullPath, () => { menuOpen.value = false })
   height: 40px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--color-surface);
   cursor: pointer;
   position: relative;
 }
@@ -154,7 +154,7 @@ watch(() => route.fullPath, () => { menuOpen.value = false })
     align-items: stretch;
     gap: 0;
     padding: 8px 16px 16px;
-    background: #fff;
+    background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     display: none;
   }

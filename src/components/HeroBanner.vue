@@ -30,7 +30,7 @@ defineProps({
 
 <style scoped>
 .hero {
-  background: linear-gradient(135deg, #eef4ff 0%, #f7f9fc 60%, #ffffff 100%);
+  background: linear-gradient(135deg, var(--color-hero-from) 0%, var(--color-hero-to) 60%, var(--color-hero-from) 100%);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -67,7 +67,7 @@ defineProps({
   gap: 32px;
   margin: 0;
   padding: 28px 32px;
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);

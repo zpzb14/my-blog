@@ -123,7 +123,7 @@ onMounted(async () => {
   font-size: 14.5px;
   font-family: inherit;
   color: var(--color-text);
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 10px;
   outline: none;

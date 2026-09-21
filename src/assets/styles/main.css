@@ -1,19 +1,40 @@
-/* ===== 设计变量 ===== */
+/* ===== 设计变量（深色主题） ===== */
 :root {
-  --color-primary: #2f6bff;
-  --color-primary-soft: #eef4ff;
-  --color-primary-soft-border: #c7dbff;
-  --color-text: #1c2536;
-  --color-text-muted: #65718a;
-  --color-border: #e5e9f2;
-  --color-surface-alt: #f4f6fb;
-  --color-danger: #e05252;
+  /* 主色 */
+  --color-primary: #58a6ff;
+  --color-primary-hover: #79b8ff;
+  --color-primary-soft: #132339;
+  --color-primary-soft-border: #244a75;
+
+  /* 背景层次：页面 → 卡片 → 更浅的块 */
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-alt: #1c2430;
+  --color-nav-bg: rgba(13, 17, 23, 0.88);
+
+  /* 文字 */
+  --color-text: #e6edf3;
+  --color-text-muted: #9198a1;
+  --color-text-inverse: #0d1117;
+
+  /* 分隔线与强调 */
+  --color-border: #232a33;
+  --color-border-strong: #30363d;
+  --color-danger: #ff7b72;
+
+  /* 代码块 */
+  --color-code-bg: #010409;
+  --color-code-text: #e6edf3;
+
+  /* 首页大图渐变 */
+  --color-hero-from: #0d1117;
+  --color-hero-to: #111a26;
 
   --radius-sm: 8px;
   --radius-lg: 14px;
 
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
-  --shadow-md: 0 12px 28px rgba(16, 24, 40, 0.1);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.45);
 
   --layout-max: 1120px;
 }
@@ -23,7 +44,10 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+}
 
 body {
   margin: 0;
@@ -31,7 +55,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   color: var(--color-text);
-  background: #fafbfe;
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -42,6 +66,12 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
 button { font-family: inherit; }
+
+/* 滚动条也跟着变深 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #454c56; }
 
 /* ===== 通用布局 ===== */
 .container {
@@ -84,18 +114,21 @@ button { font-family: inherit; }
 
 .btn--primary {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
-.btn--primary:hover { background: #2258dd; }
+.btn--primary:hover { background: var(--color-primary-hover); }
 
 .btn--ghost {
-  background: #fff;
+  background: var(--color-surface);
   border-color: var(--color-border);
   color: var(--color-text);
 }
 
-.btn--ghost:hover { border-color: var(--color-primary-soft-border); color: var(--color-primary); }
+.btn--ghost:hover {
+  border-color: var(--color-primary-soft-border);
+  color: var(--color-primary);
+}
 
 .tag {
   display: inline-block;
@@ -118,7 +151,7 @@ button { font-family: inherit; }
 
 /* 骨架屏加载态 */
 .skeleton {
-  background: linear-gradient(90deg, #eef1f7 25%, #f6f8fc 37%, #eef1f7 63%);
+  background: linear-gradient(90deg, #161b22 25%, #1c2430 37%, #161b22 63%);
   background-size: 400% 100%;
   animation: skeleton 1.4s ease infinite;
   border-radius: var(--radius-sm);
